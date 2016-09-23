@@ -3,8 +3,9 @@ import { NavController } from 'ionic-angular';
 import { Events } from 'ionic-angular';
 //import {SearchPage} from '../pages/search/search';
 
+
 @Component({
-    selector: 'app-header',
+    selector: 'xapi-header',
     template: `
         <ion-navbar>
             <!--
