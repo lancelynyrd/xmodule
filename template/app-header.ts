@@ -18,6 +18,7 @@ import { Events } from 'ionic-angular';
 
             <ion-title>
                 {{ appTitle }}
+                {{ subTitle }}
             </ion-title>
             
             <ion-buttons right>
@@ -39,6 +40,7 @@ export class AppHeader {
     @Input() hideCreateButton: boolean;
     static initialized: boolean;
     private loggedIn: boolean;
+    public subTitle: string = '';
     constructor(
         private navCtrl: NavController,
         private events: Events
@@ -77,5 +79,9 @@ export class AppHeader {
 
     onClickSearch () {
 //      this.navCtrl.push( SearchPage );
+    }
+    func() {
+        console.log("appHeader func()");
+        alert('hi');
     }
 }
