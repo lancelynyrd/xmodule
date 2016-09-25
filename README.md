@@ -53,3 +53,30 @@ template/register.ts 에 관련 루틴이 있다.
 register.ts 컴포넌트의 속성에 접근하기 위해서는 @ViewChild() 를 사용하고
 RegisterTemplate 에서 부모 컴포넌트로 접근하기 위해서는 @Output() event 를 사용한다.
 
+
+
+
+# 코딩 가이드
+
+xapi 는 앱을 작성 할 때 사용되는 라이브러리이다.
+
+xapi 에 백엔드 서버 주소 등은 앱 마다 틀리다.
+
+그리고 이러한 결정은 가능한 xapi 의 수정 없이 부모 앱에서 할 수 있어야 한다.
+
+따라서 앱의 영역에 xapi-config.ts 를 두는데, 그 위치는 xapi 폴더 바로 위 영역이어야 한다.
+
+따라서 xapi 에서 xapi-config.ts 를 포함하기 위해서는 import * as xc from '../xapi-config'; 와 같이 하면 된다.
+
+xapi-config.ts 는 xapi 에 필요한 각종 변수, 함수, 클래스, 인터페이스 등을 기록하는 장소이다.
+
+
+
+## 언어 변경
+
+한글, 영어 등의 언어로 변경하기 위해서, 가장 간편하게 하기 위해서
+
+template/register.ts 처러 t 변수에 텍스를 기록하고,
+
+앱에서 원하는 대로 변경하게 한다.
+
