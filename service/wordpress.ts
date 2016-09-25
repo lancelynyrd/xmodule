@@ -24,7 +24,7 @@ export class WordPress {
 
 
     /**
-     * @param error - is error callback. This is called only on server fault.
+     * @param errorCallback - is error callback. It is usually called on server fault.
      */
     get( url: string, successCallback, errorCallback? ) {
         console.log("WordPress::get : " + url );
@@ -69,7 +69,7 @@ export class WordPress {
         return this.get( this.serverUrl + "?xapi=ping", callback);
     }
 
-    register( data: wi.UserRegisterData, callback: (res:wi.RegisterResponse) => void ) {
+    register( data: wi.UserRegisterData, successCallback: (res:wi.RegisterResponse) => void, errorCallback? ) {
         /*
         let e = encodeURIComponent;
         let q = Object.keys( data )
@@ -78,7 +78,7 @@ export class WordPress {
             */
         let url = this.serverUrl + '?xapi=user.register&' + lib.http_build_query( data );
         console.log('Xforum::register() : ' + url);
-        this.get( url, (x:wi.RegisterResponse) => callback(x));
+        this.get( url, (x:wi.RegisterResponse) => successCallback(x), errorCallback);
     }
 
     login(user_login: string, user_pass: string, callback, error) {
@@ -156,8 +156,6 @@ export class WordPress {
 
     }
 
-
-    
     errorHandler( err: any ) {
         let errMsg = (err.message) ?
             err.message :

@@ -20,26 +20,6 @@ Ionic 2 xapi for wordpress xapi
 
 
 
-# How to translate language
-
-템플릿이나 service 에 't' 라는 public 객체 변수를 아래와 같이 지정하여, 부모 컴포넌트에서 번역을 할 수 있도록 한다.
-every template/service must have a public object named 't' like below and parent compoent will translate it.
-
-example code)
-
-    t = {
-        User_ID: 'User ID',
-        Password: 'Password'
-    };
-
-번역은 @ViewChild() 로 하면 된다.
-Translate with @ViewChild()
-
-
-example code)
-
-  @ViewChild('Register') register: RegisterTemplate;
-  this.register.t.User_ID = '회원 아이디';
 
 
 # registration
@@ -74,9 +54,33 @@ xapi-config.ts 는 xapi 에 필요한 각종 변수, 함수, 클래스, 인터�
 
 ## 언어 변경
 
+주의 : xapi 자체에서 언어 변경 기능을 넣지 않는다.
+
+다만 언어 변경을 할 수는 있게 한다.
+
 한글, 영어 등의 언어로 변경하기 위해서, 가장 간편하게 하기 위해서
 
-template/register.ts 처러 t 변수에 텍스를 기록하고,
+template/register.ts 처러 t 변수에 변경 할 텍스트를 기록하고,
 
-앱에서 원하는 대로 변경하게 한다.
+실제 언어 변경을 앱에서 원하는 대로 변경하게 한다.
 
+예를 들어 xapi/template/register.ts 를 보면, t 멤버 변수에 변경 할 수 있는 문자열을 저장 해 놓고 활용한다.
+
+* 템플릿이나 service 에 't' 라는 public 객체 변수를 아래와 같이 지정하여, 부모 컴포넌트에서 번역을 할 수 있도록 한다.
+* every template/service must have a public object named 't' like below and parent compoent will translate it.
+
+example code)
+
+    t = {
+        User_ID: 'User ID',
+        Password: 'Password'
+    };
+
+번역은 @ViewChild() 로 하면 된다.
+Translate with @ViewChild()
+
+
+example code)
+
+  @ViewChild('Register') register: RegisterTemplate;
+  this.register.t.User_ID = '회원 아이디';

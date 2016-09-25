@@ -64,9 +64,9 @@ export class RegisterTemplate {
     Birthday: 'Birthday',
     Gender: 'Gender',
     Input_User_ID: 'Input User ID',
-    Input_User_Password: 'Input User Password',
-    Input_User_Email: 'Input User Email',
-    Input_User_Name: 'Input User Name',
+    Input_Password: 'Input Password',
+    Input_Email: 'Input Email',
+    Input_Name: 'Input Name',
     Input_Mobile: 'Input Mobile',
     Input_Birthday: 'Input Birthday',
     Input_Gender: 'Input Gender',
@@ -103,6 +103,10 @@ export class RegisterTemplate {
         console.log("RegisterTemplate::onClickRegister() error");
         this.error.emit( <string>re.data );
       }
+    },
+    ( err ) => {
+      console.log('RegisterTemplate::onClickRegister() error: ', err);
+      this.error.emit('server_error');
     });
     this.afterRegister.emit(this);
   }
