@@ -3,7 +3,7 @@
  * @refer README.md
  */
 import { Component, Output, EventEmitter } from '@angular/core';
-import { WordPress } from '../service/wordpress';
+import { Xapi } from '../service/xapi';
 import * as wi from '../interface/wordpress';
 @Component({
   selector: 'xapi-register',
@@ -51,7 +51,7 @@ import * as wi from '../interface/wordpress';
 
   </ion-list>
   `,
-  providers: [WordPress]
+  providers: [ Xapi ]
 })
 export class RegisterTemplate {
   private user: wi.UserRegisterData = wi.userRegisterData;
@@ -71,13 +71,17 @@ export class RegisterTemplate {
     Input_Birthday: 'Input Birthday',
     Input_Gender: 'Input Gender',
     Register: 'Register',
+    Update: 'Update',
     Cancel: 'Cancel'
   };
-  o = {
+  /**
+   * 이 값을 앱에서 변경하여 원하는 필드를 보이지 않게 할 수 있다.
+   */
+  public o = {
     Name: true,
     Mobile: true,
-    Birthday: false,
-    Gender: false
+    Birthday: true,
+    Gender: true
   };
   @Output() beforeRegister = new EventEmitter<RegisterTemplate>();
   @Output() afterRegister = new EventEmitter<RegisterTemplate>();
@@ -86,15 +90,33 @@ export class RegisterTemplate {
   @Output() error = new EventEmitter<string>();
 
   constructor(
-    private wp: WordPress
+    private x: Xapi
   ) {
     console.log('RegisterTemplate::constructor()');
+    this.x.getLoginData( x => {
+      //console.log('user login info: ', x);
+      //console.log(x);
+      //console.log(this.t);
+      if ( x && x.session_id ) {
+        this.userLoggedIn();
+      }
+    });
+  }
+
+  /**
+   * 회원이 이미 로그인을 한 경우 이 함수가 호출된다.
+   */
+  userLoggedIn() {
+    this.t.Register = this.t.Update;
+    /**
+     * @todo 여기서부터. 회원이 로그인을 했으면, 회원 정보를 입력 항목에 넣어서 수정 할 수 있도록 한다.
+     */
   }
 
   onClickRegister() {
     console.log("RegisterTemplate::onClickRegister()");
     this.beforeRegister.emit(this);
-    this.wp.register( this.user, ( re: wi.RegisterResponse ) => {
+    this.x.register( this.user, ( re: wi.RegisterResponse ) => {
       if ( re.success ) {
         console.log("RegisterTemplate::onClickRegister() success");
         this.success.emit( re.data );
