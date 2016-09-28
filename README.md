@@ -61,6 +61,19 @@ xapi-config.ts 는 xapi 에 필요한 각종 변수, 함수, 클래스, 인터�
 
 
 
+## 템플릿에서 발생하는 이벤트트
+
+템플릿(회원 가입, 수정, 탈퇴, 로그인, 로그아웃 등)에서 아래의 이벤트를 앱으로 발생 시킨다.
+
+이벤트로
+
+    * beforeRequest : 서버로 호출 직전에 이벤트가 발생
+    * afterRequeset : 서버로 호출 한 다음에 이벤트가 발생. success, error 이벤트가 발생하지 직전에 먼저 이 이벤트가 발생한다.
+    * success : 성공
+    * error : 실패. 주의 : 이 이벤트는 서버 4xx, 5xx 등의 에러를 포함하지 않는다. 오직 2xx 등 서버로 쿼리가 올바로 이루어진 후, 결과가 올바르지 않는 경우, 발생하는 에러이다. 예를 들면 비밀번호가 틀리는 등의 에러 상황에서 발생하는 이벤트이다.
+    * cancel : 취소 버튼이 눌러진 경우 이벤트가 발생.
+
+
 ## 회원 로그인 체크
 
 회원 로그인은 app-header.ts 템플릿부터 많은 템플릿에서 기본적으로 사용된다.
@@ -76,6 +89,13 @@ xapi-config.ts 는 xapi 에 필요한 각종 변수, 함수, 클래스, 인터�
 
 필요한 경우 템플릿이 아닌 앱의 page 에서도 위의 코드를 그대로 사용 할 수 있다.
 다만, 꼭 필요 한 경우에만 사용 해야 한다.
+
+### 로그인 성공시 회원 정보가 파라메타로전달된다.
+
+  onSuccess( user: x.UserData) {
+    console.log("onSuccess()");
+    this.api.alert("LOGIN OK", `Welcome, ${user.user_login}. You have logged in.`);
+  }
 
 
 
@@ -111,3 +131,59 @@ example code)
 
   @ViewChild('Register') register: RegisterTemplate;
   this.register.t.User_ID = '회원 아이디';
+
+
+
+# 회원 가입
+
+앱에서 회원 가입/수정 페이지를 보여주는 경우, 아래와 같이 xapi-register 를 사용하면 된다.
+
+예제)
+
+  <xapi-register #Register
+      (beforeRequest)="onBeforeRequest($event)"
+      (afterRequest)="onAfterRequest($event)"
+      (success)="onSuccess($event)"
+      (cancel)="onCancel($event)"
+      (error)="onError($event)"
+    ></xapi-register>
+
+# 회원 로그인
+
+아래의 예제는 앱에서 xapi/template/login.ts 템플릿을 포함하여 회원 로그인 페이지를 만든 예제이다.
+
+예제) page/login.ts
+
+    import { Component, ViewChild } from '@angular/core';
+    import { NavController } from 'ionic-angular';
+    import { LoginTemplate } from '../../xapi/template/login';
+    import * as x from '../../xapi/all';
+    @Component({
+    templateUrl: 'build/pages/login/login.html',
+    directives: [ x.AppHeader, LoginTemplate ]
+    })
+    export class LoginPage {
+        appTitle = "Login";
+        @ViewChild('Login') login: LoginTemplate;
+        constructor(private navCtrl: NavController) {
+            console.log("LoginPage::constrcutor()");
+        }
+        ionViewLoaded() {
+            this.login.t.Login = "로그인";
+        }
+        onBeforeRequest() {
+            console.log("onBeforeRequest()");
+        }
+        onAfterRequest() {
+            console.log("onAfterRequest()");
+        }
+        onSuccess() {
+            console.log("onSuccess()");
+        }
+        onError() {
+            console.log("onError()");
+        }
+        onCancel() {
+            console.log("onCancel()");
+        }
+    }

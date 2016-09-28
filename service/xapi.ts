@@ -79,17 +79,20 @@ export class Xapi {
             */
         let url = this.serverUrl + '?xapi=user.register&' + lib.http_build_query( data );
         console.log('Xforum::register() : ' + url);
-        this.get( url, (x:wi.RegisterResponse) => {
-            console.log("WordPress::register() -> success: ", x);
-            this.setLoginData( x.data );
-            successCallback(x);
+        this.get( url, (res:wi.RegisterResponse) => {
+            console.log("WordPress::register() -> success: ", res);
+            this.saveLoginData( res.data );
+            successCallback( res );
         }, errorCallback);
     }
 
-    login(user_login: string, user_pass: string, callback, error) {
+    login( u: wi.UserLogin, callback, error) {
         console.log('Xforum::login()');
-        let url = this.serverUrl + "?xapi=user.login&user_login="+user_login+"&user_pass="+user_pass;
-        return this.get( url, ( res : wi.LoginResponse ) => callback( res ), error );
+        let url = this.serverUrl + "?xapi=user.login&user_login="+u.user_login+"&user_pass="+u.user_pass;
+        return this.get( url, ( res : wi.LoginResponse ) => {
+            this.saveLoginData( res.data );
+            callback( res );
+        }, error );
     }
 
 
@@ -191,7 +194,7 @@ export class Xapi {
             }
         });
     }
-    private setLoginData( loginResponse ) {
+    private saveLoginData( loginResponse ) {
         try {
             new Data().set('login', JSON.stringify( loginResponse ) );
         }

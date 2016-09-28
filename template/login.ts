@@ -1,6 +1,5 @@
 import { Component, Output, EventEmitter } from '@angular/core';
-import { Xapi } from '../service/xapi';
-import * as wi from '../interface/wordpress';
+import * as x from '../all';
 @Component({
   selector: 'xapi-login',
   template: `
@@ -22,28 +21,29 @@ import * as wi from '../interface/wordpress';
 
   </ion-list>
   `,
-  providers: [ Xapi ]
+  providers: [ x.Xapi ]
 })
 export class LoginTemplate {
-  private user: wi.UserRegisterData = wi.userRegisterData;
+  private user: x.UserLogin = x.userLogin;
   t = {
     User_ID: 'User ID',
     Password: 'Password',
     Input_User_ID: 'Input User ID',
     Input_Password: 'Input Password',
-    Login: 'Register',
+    Login: 'Login',
     Cancel: 'Cancel'
   };
-  @Output() beforeLogin = new EventEmitter<LoginTemplate>();
-  @Output() success = new EventEmitter<wi.UserData>();
+  @Output() beforeRequest = new EventEmitter<LoginTemplate>();
+  @Output() afterRequest = new EventEmitter<LoginTemplate>();
+  @Output() success = new EventEmitter<x.UserData>();
   @Output() cancel = new EventEmitter<LoginTemplate>();
   @Output() error = new EventEmitter<string>();
 
   constructor(
-    private x: Xapi
-  ) {
-    console.log('RegisterTemplate::constructor()');
-    this.x.getLoginData( x => this.userLoggedIn() );
+    private api: x.Xapi
+    ) {
+    console.log('LoginTemplate::constructor()');
+    this.api.getLoginData( x => this.userLoggedIn() );
   }
 
   /**
@@ -54,8 +54,9 @@ export class LoginTemplate {
 
   onClickLogin() {
     console.log("RegisterTemplate::onClickRegister()");
-    this.beforeLogin.emit(this);
-    this.x.register( this.user, ( re: wi.RegisterResponse ) => {
+    this.beforeRequest.emit(this);
+    this.api.login( this.user, ( re: x.RegisterResponse ) => {
+      this.afterRequest.emit(this);
       if ( re.success ) {
         console.log("RegisterTemplate::onClickRegister() success");
         this.success.emit( re.data );
@@ -66,17 +67,15 @@ export class LoginTemplate {
       }
     },
     ( err ) => {
+      this.afterRequest.emit(this);
       console.log('RegisterTemplate::onClickRegister() error: ', err);
-      this.error.emit('server_error');
+      // this.error.emit('server_error');
     });
-    this.afterRegister.emit(this);
   }
 
   onClickCancel() {
     console.log("RegisterTemplate::onClickCancel()");
     this.cancel.emit(this);
   }
-  
-
 
 }

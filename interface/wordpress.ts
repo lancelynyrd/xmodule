@@ -1,5 +1,10 @@
 
 
+export interface UserLogin {
+  user_login: string;
+  user_pass: string;
+}
+export let userLogin: UserLogin = { user_login: '', user_pass: '' };
 
 export interface UserData {
     code?: string,

@@ -79,7 +79,8 @@ export class RegisterTemplate {
     Birthday: true,
     Gender: true
   };
-  @Output() beforeRegister = new EventEmitter<RegisterTemplate>();
+  @Output() beforeRequest = new EventEmitter<RegisterTemplate>();
+  @Output() afterRequest = new EventEmitter<RegisterTemplate>();
   @Output() success = new EventEmitter<wi.UserData>();
   @Output() cancel = new EventEmitter<RegisterTemplate>();
   @Output() error = new EventEmitter<string>();
@@ -101,10 +102,16 @@ export class RegisterTemplate {
      */
   }
 
+  /**
+   * 회원 가입
+   * @attention 서버 에러가 발생한 겨우에는 이벤트가 발생되지 않는다.
+   *    'error' 이벤트는 서버로 쿼리가 올바로 되었는데, 프로그램적으로 logical 에러가 발생한 경우 이벤트를 trigger 한다.
+   */
   onClickRegister() {
     console.log("RegisterTemplate::onClickRegister()");
-    this.beforeRegister.emit(this);
+    this.beforeRequest.emit(this);
     this.x.register( this.user, ( re: wi.RegisterResponse ) => {
+      this.afterRequest.emit(this);
       if ( re.success ) {
         console.log("RegisterTemplate::onClickRegister() success");
         this.success.emit( re.data );
@@ -115,8 +122,10 @@ export class RegisterTemplate {
       }
     },
     ( err ) => {
+      this.afterRequest.emit(this);
       console.log('RegisterTemplate::onClickRegister() error: ', err);
-      this.error.emit('server_error');
+      // 서버 에러가 발생한 경우에는 이벤트가 발생하지 않는다.
+      //this.error.emit('server_error');
     });
   }
 
