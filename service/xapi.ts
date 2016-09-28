@@ -12,8 +12,8 @@ import { Data } from './data';
 
 @Injectable()
 export class Xapi {
-    public serverUrl: string;
-    public uploadUrl: string;
+    private serverUrl: string;
+    private uploadUrl: string;
     constructor(
         private http: Http,
         private alertCtrl: AlertController ) {
@@ -27,7 +27,7 @@ export class Xapi {
     /**
      * @param errorCallback - is error callback. It is usually called on server fault.
      */
-    get( url: string, successCallback, errorCallback? ) {
+    private get( url: string, successCallback, errorCallback? ) {
         console.log("WordPress::get : " + url );
         if ( ! this.serverUrl ) return this.error("No server url");
         this.http.get( url )
@@ -43,7 +43,7 @@ export class Xapi {
             successCallback(res);
         } );
     }
-    post( url: string, body: any, successCallback, errorCallback? ) {
+    private post( url: string, body: any, successCallback, errorCallback? ) {
         console.log("WordPress::post : " + url, body );
         if ( ! this.serverUrl ) return this.error("No server url");
         let headers = new Headers( { 'Content-Type': 'application/x-www-form-urlencoded' });
@@ -115,7 +115,7 @@ export class Xapi {
     /**
      * Returns JSON from the input.
      */
-    json( str ) {
+    private json( str ) {
         let res;
         if ( ! str ) {
             this.error("WordPress::Json() - Server returns empty data");
@@ -157,11 +157,11 @@ export class Xapi {
      * Automatic report to server admin.
      * @todo when there is error, this client automatically reports and logs into server.
      */
-    reportError() {
+    private reportError() {
 
     }
 
-    errorHandler( err: any ) {
+    private errorHandler( err: any ) {
         let errMsg = (err.message) ?
             err.message :
             err.status ? `${err.status} - ${err.statusText}` : 'Server error. Please check if backend server is alive and there is no error.';
@@ -169,13 +169,20 @@ export class Xapi {
         return Observable.throw(errMsg);
     }
 
+    /**
+     * 사용자 정보를 콜백으로 리턴한다.
+     * 만약, 사용자 정보가 없거나 올바르지 않으면 콜백 함수가 호출되지 않는다.
+     * 따라서 콜백 함수가 호출되면 제대로 정보가 전달되는 것이다.
+     */
     getLoginData(callback) {
         new Data().get('login', x => {
             try {
                 // debugger;
                 if ( x ) {
-                    let str = JSON.parse( x );
-                    callback( str );
+                    let info = JSON.parse( x );
+                    if ( info && info.session_id ) {
+                        callback( info );
+                    }
                 }
             }
             catch( e ) {
@@ -184,13 +191,16 @@ export class Xapi {
             }
         });
     }
-    setLoginData( loginResponse ) {
+    private setLoginData( loginResponse ) {
         try {
             new Data().set('login', JSON.stringify( loginResponse ) );
         }
         catch ( e ) {
             this.error("setLoginData() -> JSON.stringify() error");
         }
+    }
+    logout() {
+        new Data().db.remove('login');
     }
 
 }

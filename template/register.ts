@@ -1,7 +1,3 @@
-/**
- * 
- * @refer README.md
- */
 import { Component, Output, EventEmitter } from '@angular/core';
 import { Xapi } from '../service/xapi';
 import * as wi from '../interface/wordpress';
@@ -84,7 +80,6 @@ export class RegisterTemplate {
     Gender: true
   };
   @Output() beforeRegister = new EventEmitter<RegisterTemplate>();
-  @Output() afterRegister = new EventEmitter<RegisterTemplate>();
   @Output() success = new EventEmitter<wi.UserData>();
   @Output() cancel = new EventEmitter<RegisterTemplate>();
   @Output() error = new EventEmitter<string>();
@@ -93,14 +88,7 @@ export class RegisterTemplate {
     private x: Xapi
   ) {
     console.log('RegisterTemplate::constructor()');
-    this.x.getLoginData( x => {
-      //console.log('user login info: ', x);
-      //console.log(x);
-      //console.log(this.t);
-      if ( x && x.session_id ) {
-        this.userLoggedIn();
-      }
-    });
+    this.x.getLoginData( x => this.userLoggedIn() );
   }
 
   /**
@@ -130,7 +118,6 @@ export class RegisterTemplate {
       console.log('RegisterTemplate::onClickRegister() error: ', err);
       this.error.emit('server_error');
     });
-    this.afterRegister.emit(this);
   }
 
   onClickCancel() {

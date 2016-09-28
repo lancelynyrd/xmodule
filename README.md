@@ -3,6 +3,15 @@
 Ionic 2 xapi for wordpress xapi
 
 
+# TODO
+
+* login.ts 를 작업하다가 졸려서 중단 했음.
+
+* 회원 정보 수정.
+
+    xapi=user.get&login=abc 를 통해서 회원 정보를 추출 하고 보여 줄 것.
+    
+
 # Folder structure
 
     * xapi/template/
@@ -49,6 +58,24 @@ xapi 에 백엔드 서버 주소 등은 앱 마다 틀리다.
 따라서 xapi 에서 xapi-config.ts 를 포함하기 위해서는 import * as xc from '../xapi-config'; 와 같이 하면 된다.
 
 xapi-config.ts 는 xapi 에 필요한 각종 변수, 함수, 클래스, 인터페이스 등을 기록하는 장소이다.
+
+
+
+## 회원 로그인 체크
+
+회원 로그인은 app-header.ts 템플릿부터 많은 템플릿에서 기본적으로 사용된다.
+
+로그인에 따른 옵션 처리를 앱에서 @ViewChild() 등으로 하지 말고
+
+그냥 해당 template 에서 direct 로 아래와 같이 처리를 한다.
+
+예제) 템플릿에서 예제 코드. Xapi 를 x 로 DI 해서 사용하면 된다.
+
+    this.x.getLoginData( x => this.userLoggedIn() );
+    userLoggedIn() { ... 필요한 처리 ... }
+
+필요한 경우 템플릿이 아닌 앱의 page 에서도 위의 코드를 그대로 사용 할 수 있다.
+다만, 꼭 필요 한 경우에만 사용 해야 한다.
 
 
 
