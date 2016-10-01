@@ -1,14 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Http, Headers, RequestOptions } from '@angular/http';
+import { Events } from 'ionic-angular';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { Library as lib } from './library';
 import { AlertController } from 'ionic-angular';
-import * as wi from '../interface/wordpress';
-import * as xc from '../../xapi-config';
-import { Data } from './data';
+import * as wi from '../interfaces/wordpress';
+//import * as xc from '../../xapi-config';
+//import { Data } from './data';
+import { Storage } from '@ionic/storage';
+
 
 @Injectable()
 export class Xapi {
@@ -16,10 +19,12 @@ export class Xapi {
     private uploadUrl: string;
     constructor(
         private http: Http,
-        private alertCtrl: AlertController ) {
+        private alertCtrl: AlertController,
+        private storage: Storage,
+        private events: Events
+        ) {
         //
-
-        this.serverUrl = xc.serverUrl;
+        this.serverUrl = "http://work.org/wordpress/index.php";
         this.uploadUrl = this.serverUrl + "?xapi=file.upload&type=primary-photo";
     } 
 
@@ -28,8 +33,8 @@ export class Xapi {
      * @param errorCallback - is error callback. It is usually called on server fault.
      */
     private get( url: string, successCallback, errorCallback? ) {
-        console.log("WordPress::get : " + url );
         if ( ! this.serverUrl ) return this.error("No server url");
+        console.log("WordPress::get : ", url );
         this.http.get( url )
         .map( e => {
             return this.json(e['_body']);
@@ -82,15 +87,17 @@ export class Xapi {
         this.get( url, (res:wi.RegisterResponse) => {
             console.log("WordPress::register() -> success: ", res);
             this.saveLoginData( res.data );
+            this.events.publish( 'register', res.data );
             successCallback( res );
         }, errorCallback);
     }
 
     login( u: wi.UserLogin, callback, error) {
-        console.log('Xforum::login()');
         let url = this.serverUrl + "?xapi=user.login&user_login="+u.user_login+"&user_pass="+u.user_pass;
+        console.log('Xforum::login()', url);
         return this.get( url, ( res : wi.LoginResponse ) => {
             this.saveLoginData( res.data );
+            this.events.publish( 'login', res.data );
             callback( res );
         }, error );
     }
@@ -178,7 +185,7 @@ export class Xapi {
      * 따라서 콜백 함수가 호출되면 제대로 정보가 전달되는 것이다.
      */
     getLoginData(callback) {
-        new Data().get('login', x => {
+        this.storage.get('login').then(x => {
             try {
                 // debugger;
                 if ( x ) {
@@ -196,14 +203,15 @@ export class Xapi {
     }
     private saveLoginData( loginResponse ) {
         try {
-            new Data().set('login', JSON.stringify( loginResponse ) );
+            this.storage.set('login', JSON.stringify( loginResponse ) );
         }
         catch ( e ) {
             this.error("setLoginData() -> JSON.stringify() error");
         }
     }
     logout() {
-        new Data().db.remove('login');
+        this.storage.remove('login');
+        this.events.publish('logout');
     }
 
 }

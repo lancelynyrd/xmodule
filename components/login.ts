@@ -1,5 +1,7 @@
 import { Component, Output, EventEmitter } from '@angular/core';
-import * as x from '../all';
+import { Xapi } from '../providers/xapi';
+import * as wi from '../interfaces/wordpress';
+//import * as x from '../all';
 @Component({
   selector: 'xapi-login',
   template: `
@@ -15,16 +17,15 @@ import * as x from '../all';
       </ion-item>
 
       <ion-item>
-        <button (click)="onClickLogin()">{{t.Login}}</button>
-        <button (click)="onClickCancel()">{{t.Cancel}}</button>
+        <button ion-button (click)="onClickLogin()">{{t.Login}}</button>
+        <button ion-button (click)="onClickCancel()">{{t.Cancel}}</button>
       </ion-item>
 
   </ion-list>
-  `,
-  providers: [ x.Xapi ]
+  `
 })
 export class LoginTemplate {
-  private user: x.UserLogin = x.userLogin;
+  private user: wi.UserLogin = wi.userLogin;
   t = {
     User_ID: 'User ID',
     Password: 'Password',
@@ -35,12 +36,12 @@ export class LoginTemplate {
   };
   @Output() beforeRequest = new EventEmitter<LoginTemplate>();
   @Output() afterRequest = new EventEmitter<LoginTemplate>();
-  @Output() success = new EventEmitter<x.UserData>();
+  @Output() success = new EventEmitter<wi.UserData>();
   @Output() cancel = new EventEmitter<LoginTemplate>();
   @Output() error = new EventEmitter<string>();
 
   constructor(
-    private api: x.Xapi
+    private api: Xapi
     ) {
     console.log('LoginTemplate::constructor()');
     this.api.getLoginData( x => this.userLoggedIn() );
@@ -55,7 +56,7 @@ export class LoginTemplate {
   onClickLogin() {
     console.log("RegisterTemplate::onClickRegister()");
     this.beforeRequest.emit(this);
-    this.api.login( this.user, ( re: x.RegisterResponse ) => {
+    this.api.login( this.user, ( re: wi.RegisterResponse ) => {
       this.afterRequest.emit(this);
       if ( re.success ) {
         console.log("RegisterTemplate::onClickRegister() success");

@@ -1,20 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Storage, LocalStorage } from 'ionic-angular';
+import { Storage } from '@ionic/storage';
 @Injectable()
 export class Data {
-  static storage: Storage = null;
-  constructor() {
-      console.log("Database::constructor()");
-      if ( Data.storage ) {
-          console.log("App is already connected to storage.");
-      }
-      else {
-          console.log("Connecting to LocalStorage...");
-          Data.storage = new Storage( LocalStorage, {name: 'appDb'} );
-      }
+  constructor( private storage: Storage ) {
   }
   get db () : Storage {
-      return Data.storage;
+      return this.storage;
   }
   /**
    * 
@@ -27,10 +18,12 @@ export class Data {
       data.get('run', (v) => console.log(v));
       @endcode
    */
+  /*
   get( key: string, callback: any ) : void {
       this.db.get( key )
         .then( x => callback(x) );
   }
+  */
 
   
   /**

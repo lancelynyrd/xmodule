@@ -1,6 +1,6 @@
 import { Component, Output, EventEmitter } from '@angular/core';
-import { Xapi } from '../service/xapi';
-import * as wi from '../interface/wordpress';
+import { Xapi } from '../providers/xapi';
+import * as wi from '../interfaces/wordpress';
 @Component({
   selector: 'xapi-register',
   template: `
@@ -41,8 +41,8 @@ import * as wi from '../interface/wordpress';
       </ion-item>
 
       <ion-item>
-        <button (click)="onClickRegister()">{{t.Register}}</button>
-        <button (click)="onClickCancel()">{{t.Cancel}}</button>
+        <button ion-button (click)="onClickRegister()">{{t.Register}}</button>
+        <button ion-button (click)="onClickCancel()">{{t.Cancel}}</button>
       </ion-item>
 
   </ion-list>

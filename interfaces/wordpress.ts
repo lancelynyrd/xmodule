@@ -26,7 +26,7 @@ export interface RegisterResponse {
 }
 
 
-type Gender = '' | 'M' | 'F';
+export type Gender = '' | 'M' | 'F';
 export interface UserRegisterData {
     user_login: string;
     user_pass: string;

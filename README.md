@@ -5,6 +5,14 @@ Ionic 2 xapi for wordpress xapi
 
 # TODO
 
+* @doc AppHeader 는 컴포넌트로서 각 앱에서 커스터마이징을 해야 한다.
+
+    AppHeaderComponent 로 명칭을 벼녕하도록 한다.
+
+    AppHeader 에서 Event 를 밖으로 보내는 것은 모든 페이지에서 이벤트를 받아서 처리해야 하기 때문에 힘들다.
+
+
+
 * login.ts 를 작업하다가 졸려서 중단 했음.
 
 * 회원 정보 수정.
@@ -12,7 +20,13 @@ Ionic 2 xapi for wordpress xapi
     xapi=user.get&login=abc 를 통해서 회원 정보를 추출 하고 보여 줄 것.
     
 
-# Folder structure
+# Installation
+
+ionic plugin add cordova-plugin-whitelist --save
+
+
+/*
+# Old Folder structure
 
     * xapi/template/
         In this folder, only template can be put.
@@ -24,9 +38,30 @@ Ionic 2 xapi for wordpress xapi
         In this folder, only service and function can be put.
         No theme, css, template, page.
         But service, functions
+*/
 
 
 
+# New foler structure
+
+* xapi/components
+    In this folder, all components, directives, templates are stored.
+    For the maintanance, each typescript files should stand alone.
+        there should be only .ts files. no html files, css files, image files...
+
+* xapi/interfaces
+    all interfaces stay here.
+    Jsut import and use interfaces any place.
+
+* xapi/pipes
+    all pipes must be placed here.
+
+* xapi/providers
+    all service proders must be placed here.
+
+* xapi/modules
+    all modules of xapi must be placed here.
+    
 
 
 
@@ -187,3 +222,50 @@ example code)
             console.log("onCancel()");
         }
     }
+
+
+# 코딩 가이드
+
+## 컴포넌트
+xapi/components 의 내용은 모든 앱(프로젝트)마다 커스터마징을 따로 해야 한다.
+
+필요에 따라서 xapi/components/* 의 내용을 src/components/* 폴더로 복사해서 사용을 하면 된다.
+
+## Global Event 전송을 통한 액션 처리
+
+어떤 컴포넌트에서 어떤 행동을 취하면 다른 컴포넌트에 영향이 미쳐야하는 경우가 있다.
+
+예를 들면, AppHeader 에서 logout 을 하면, 페이지 본문의 로그인 사용자 정보가 사라지고 로그인 입력창이 나타나야한다.
+
+이것은 다른 페이지로 이동(navCtrl.pop)했을 경우에도 로그 아웃을 한 정보가 나와야 한다.
+
+즉, 현재 컴포넌트 뿐만아니라 다른 모든 컴포넌트의 상태 변경을 해야하는데, 이 때 액션을 통해서 처리를 한다.
+
+이와 같은 경우, 어느 컴포넌트에서든지 로그아웃 기능을 수행하면 logout 이벤트를 발생시키면된다.
+
+그러면 필요한 곳에서 subscribe 해서 적절히 처리를 하면 되는 것이다.
+
+
+### 참고 : 자식 컴포넌트에서 부모 컴포넌트로 전송하는 이벤트와는 별개의 이다.
+
+예를 들어 로그인 컴포넌트에서 로그인을 할 때, beforeRequest 등의 이벤트를 부모 컴포넌트로 보내는데,
+
+이것은 Global Event 전송이 아닌 부모 컴포넌트에게만 보내는 것이다.
+
+
+
+
+
+### 액션의 종류
+
+    * login
+        사용자 정보가 전달된다.
+        이벤트가 전송되기 전에 회원 정보가 LocalStroage 에 저장된다.
+    * logout
+        전달되는 정보가 없다.
+        이벤트가 전송되기 전에 회원 정보가 LocalStroage 에서 삭제된다.
+    * register
+        사용자 정보가 전달된다.
+        이벤트가 전송되기 전에 회원 정보가 LocalStroage 에 저장된다.
+    
+
