@@ -1,16 +1,17 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { Xapi } from '../providers/xapi';
-import * as wi from '../interfaces/wordpress';
+import * as xi from '../interfaces/xapi';
 @Component({
   selector: 'xapi-register',
   template: `
     <ion-list>
-      <ion-item>
+
+      <ion-item *ngIf=" ! loggedIn ">
         <ion-label primary stacked>{{t.User_ID}}</ion-label>
         <ion-input [(ngModel)]="user.user_login" placeholder="{{t.Input_User_ID}}"></ion-input>
       </ion-item>
 
-      <ion-item>
+      <ion-item *ngIf=" ! loggedIn ">
         <ion-label primary stacked>{{t.Password}}</ion-label>
         <ion-input [(ngModel)]="user.user_pass" placeholder="{{t.Input_Password}}"></ion-input>
       </ion-item>
@@ -41,7 +42,8 @@ import * as wi from '../interfaces/wordpress';
       </ion-item>
 
       <ion-item>
-        <button ion-button (click)="onClickRegister()">{{t.Register}}</button>
+        <button *ngIf=" ! loggedIn " ion-button (click)="onClickRegister()">{{t.Register}}</button>
+        <button *ngIf="   loggedIn " ion-button (click)="onClickUpdate()">{{t.Update}}</button>
         <button ion-button (click)="onClickCancel()">{{t.Cancel}}</button>
       </ion-item>
 
@@ -50,7 +52,8 @@ import * as wi from '../interfaces/wordpress';
   providers: [ Xapi ]
 })
 export class RegisterComponent {
-  private user: wi.UserRegisterData = wi.userRegisterData;
+  loggedIn: boolean = false;
+  user: xi.UserRegisterData = xi.userRegisterData;
   t = {
     User_ID: 'User ID',
     Password: 'Password',
@@ -81,7 +84,7 @@ export class RegisterComponent {
   };
   @Output() beforeRequest = new EventEmitter<RegisterComponent>();
   @Output() afterRequest = new EventEmitter<RegisterComponent>();
-  @Output() success = new EventEmitter<wi.UserData>();
+  @Output() success = new EventEmitter<xi.UserLoginData>();
   @Output() cancel = new EventEmitter<RegisterComponent>();
   @Output() error = new EventEmitter<string>();
 
@@ -89,6 +92,7 @@ export class RegisterComponent {
     private x: Xapi
   ) {
     console.log('RegisterComponent::constructor()');
+    this.user = <xi.UserRegisterData>{};
     this.x.getLoginData( user => this.userLoggedIn( user ) );
   }
 
@@ -98,10 +102,26 @@ export class RegisterComponent {
    *  1. 로그인 관련 정보 출력
    *  2. 서버로 부터 로그인 사용자의 정보를 추출하여 폼에 입력
    */
-  userLoggedIn( user: wi.UserData ) {
-    this.t.Register = this.t.Update;
-//    this.x.get_user( user.user_login, u => onGetUser( u ), e => onGetUserError( e ) )
+  userLoggedIn( user: xi.UserLoginData ) {
+
+    //this.t.Register = this.t.Update;
+    this.loggedIn = true;
+    this.x.get_user( user.user_login, u => this.onGetUser( u.data ), e => this.onGetUserError( e ) )
   }
+  onGetUser( user: xi.UserData ) {
+    console.log('onGetUser()', user );
+    this.user.session_id = user.session_id;
+    this.user.user_login = user.user_login;
+    this.user.user_email = user.user_email;
+    this.user.name = user.meta.name;
+    this.user.mobile = user.meta.mobile;
+    this.user.birthday = user.meta.birthday;
+    this.user.gender = user.meta.gender;
+  }
+  onGetUserError( e ) {
+    console.log( 'onGetUserError() ', e );
+  }
+
 
   /**
    * 회원 가입
@@ -111,7 +131,7 @@ export class RegisterComponent {
   onClickRegister() {
     console.log("RegisterComponent::onClickRegister()");
     this.beforeRequest.emit(this);
-    this.x.register( this.user, ( re: wi.RegisterResponse ) => {
+    this.x.register( this.user, ( re: xi.RegisterResponse ) => {
       this.afterRequest.emit(this);
       if ( re.success ) {
         console.log("RegisterComponent::onClickRegister() success");
@@ -125,8 +145,26 @@ export class RegisterComponent {
     ( err ) => {
       this.afterRequest.emit(this);
       console.log('RegisterComponent::onClickRegister() error: ', err);
-      // 서버 에러가 발생한 경우에는 이벤트가 발생하지 않는다.
-      //this.error.emit('server_error');
+    });
+  }
+  onClickUpdate() {
+    console.log("RegisterComponent::onClickUpdate()");
+    this.beforeRequest.emit(this);
+    this.x.userUpdate( this.user, ( re: xi.RegisterResponse ) => {
+      console.log('RegisterComponent::onClickUpdate() -> userUpdate-> after', re);
+      this.afterRequest.emit(this);
+      if ( re.success ) {
+        console.log("RegisterComponent::onClickUpdate() success");
+        this.success.emit( re.data );
+      }
+      else {
+        console.log("RegisterComponent::onClickUpdate() error");
+        this.error.emit( <string>re.data );
+      }
+    },
+    ( err ) => {
+      this.afterRequest.emit(this);
+      console.log('RegisterComponent::onClickUpdate() error: ', err);
     });
   }
 

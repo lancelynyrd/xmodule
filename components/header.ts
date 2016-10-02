@@ -43,7 +43,7 @@ export class HeaderComponent {
     @Input() hideCreateButton: boolean;
 
     static initialized: boolean;
-    private loggedIn: boolean = false;
+    public loggedIn: boolean = false;
     public subTitle: string = '';
     constructor(
         private navCtrl: NavController,

@@ -1,6 +1,6 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { Xapi } from '../providers/xapi';
-import * as wi from '../interfaces/wordpress';
+import * as xi from '../interfaces/xapi';
 //import * as x from '../all';
 @Component({
   selector: 'xapi-login',
@@ -25,7 +25,7 @@ import * as wi from '../interfaces/wordpress';
   `
 })
 export class LoginComponent {
-  private user: wi.UserLogin = wi.userLogin;
+  user: xi.UserLogin = xi.userLogin;
   t = {
     User_ID: 'User ID',
     Password: 'Password',
@@ -36,7 +36,7 @@ export class LoginComponent {
   };
   @Output() beforeRequest = new EventEmitter<LoginComponent>();
   @Output() afterRequest = new EventEmitter<LoginComponent>();
-  @Output() success = new EventEmitter<wi.UserData>();
+  @Output() success = new EventEmitter<xi.UserLoginData>();
   @Output() cancel = new EventEmitter<LoginComponent>();
   @Output() error = new EventEmitter<string>();
 
@@ -56,7 +56,7 @@ export class LoginComponent {
   onClickLogin() {
     console.log("LoginComponent::onClickRegister()");
     this.beforeRequest.emit(this);
-    this.api.login( this.user, ( re: wi.RegisterResponse ) => {
+    this.api.login( this.user, ( re: xi.RegisterResponse ) => {
       this.afterRequest.emit(this);
       if ( re.success ) {
         console.log("LoginComponent::onClickRegister() success");

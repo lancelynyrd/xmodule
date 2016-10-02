@@ -27,4 +27,4 @@ import { Storage } from '@ionic/storage';
         RegisterComponent
     ]
 })
-export class XapiModule { }
+export class XModule { }

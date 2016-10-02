@@ -7,7 +7,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
 import { Library as lib } from '../functions/library';
 import { AlertController } from 'ionic-angular';
-import * as wi from '../interfaces/wordpress';
+import * as xi from '../interfaces/xapi';
 //import * as xc from '../../xapi-config';
 //import { Data } from './data';
 import { Storage } from '@ionic/storage';
@@ -23,7 +23,7 @@ export class Xapi {
         private storage: Storage,
         private events: Events
         ) {
-        //
+            console.log("Xapi::constructor()");
         this.serverUrl = "http://work.org/wordpress/index.php";
         this.uploadUrl = this.serverUrl + "?xapi=file.upload&type=primary-photo";
     } 
@@ -75,21 +75,32 @@ export class Xapi {
         return this.get( this.serverUrl + "?xapi=ping", callback);
     }
 
-    register( data: wi.UserRegisterData, successCallback: (res:wi.RegisterResponse) => void, errorCallback? ) {
+    register( data: xi.UserRegisterData, successCallback: (res:xi.RegisterResponse) => void, errorCallback? ) {
         let url = this.serverUrl + '?xapi=user.register&' + lib.http_build_query( data );
-        console.log('Xforum::register() : ' + url);
-        this.get( url, (res:wi.RegisterResponse) => {
-            console.log("WordPress::register() -> success: ", res);
+        console.log('Xapi::register() : ' + url);
+        this.get( url, (res:xi.RegisterResponse) => {
+            console.log("Xapi::register() -> success: ", res);
             this.saveLoginData( res.data );
             this.events.publish( 'register', res.data );
             successCallback( res );
         }, errorCallback);
     }
+    userUpdate( user: xi.UserRegisterData, successCallback, errorCallback ) {
+        let url = this.serverUrl + '?xapi=user.update&' + lib.http_build_query( user );
+        console.log('Xapi::userUpdate()', url);
+        this.get( url, (res:xi.RegisterResponse) => {
+            console.log('Xapi::userUpdate() -> success: ', res);
+            this.saveLoginData( res.data );
+            this.events.publish( 'userUpdate', res.data );
+            successCallback( res );
+        }, errorCallback);
 
-    login( u: wi.UserLogin, callback, error) {
+    }
+
+    login( u: xi.UserLogin, callback, error) {
         let url = this.serverUrl + "?xapi=user.login&user_login="+u.user_login+"&user_pass="+u.user_pass;
         console.log('Xforum::login()', url);
-        return this.get( url, ( res : wi.LoginResponse ) => {
+        return this.get( url, ( res : xi.LoginResponse ) => {
             this.saveLoginData( res.data );
             this.events.publish( 'login', res.data );
             callback( res );
@@ -109,9 +120,9 @@ export class Xapi {
         });
      * @endcode
      */
-    get_categories( args: wi.CategoryQueryArgument, successCallback: (res: wi.Categories) => void, errorCallback ) {
+    get_categories( args: xi.CategoryQueryArgument, successCallback: (res: xi.Categories) => void, errorCallback ) {
         let url = this.serverUrl + 'categories?' + lib.http_build_query( args );
-        return this.get( url, (x: wi.Categories) => successCallback( <wi.Categories>x ), errorCallback);
+        return this.get( url, (x: xi.Categories) => successCallback( <xi.Categories>x ), errorCallback);
     }
 
 /**
@@ -138,7 +149,7 @@ export class Xapi {
     /**
      * Gets posts from WordPress
      */
-    get_posts( arg: wi.PostQuery, callback, serverError ) {
+    get_posts( arg: xi.PostQuery, callback, serverError ) {
         let params = Object.keys( arg )
                         .map( k => k + '=' + arg[k] )
                         .join( '&' );
@@ -146,7 +157,7 @@ export class Xapi {
         return this.get( url, callback, serverError );
     }
 
-post_insert( data: wi.PostEdit, callback, serverError ) {
+post_insert( data: xi.PostEdit, callback, serverError ) {
         // console.log('Xforum::post_insert()', data);
 
         /* TEST
@@ -242,7 +253,7 @@ post_insert( data: wi.PostEdit, callback, serverError ) {
             try {
                 // debugger;
                 if ( x ) {
-                    let info = JSON.parse( x );
+                    let info: xi.UserLoginData = JSON.parse( x );
                     if ( info && info.session_id ) {
                         callback( info );
                     }

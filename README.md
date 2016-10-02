@@ -1,6 +1,8 @@
-# Ionic Xapi
+# Ionic Xmodule
 
-Ionic 2 xapi for wordpress xapi
+Ionic Xmodule for Ionic app development.
+
+* api for wordpress xapi
 
 
 # TODO
@@ -44,22 +46,23 @@ ionic plugin add cordova-plugin-whitelist --save
 
 # New foler structure
 
-* xapi/components
+* xmodule/components
+
     In this folder, all components, directives, templates are stored.
     For the maintanance, each typescript files should stand alone.
         there should be only .ts files. no html files, css files, image files...
 
-* xapi/interfaces
+* xmodule/interfaces
     all interfaces stay here.
     Jsut import and use interfaces any place.
 
-* xapi/pipes
+* xmodule/pipes
     all pipes must be placed here.
 
-* xapi/providers
+* xmodule/providers
     all service proders must be placed here.
 
-* xapi/modules
+* xmodule/modules
     all modules of xapi must be placed here.
     
 
@@ -227,9 +230,9 @@ example code)
 # 코딩 가이드
 
 ## 컴포넌트
-xapi/components 의 내용은 모든 앱(프로젝트)마다 커스터마징을 따로 해야 한다.
+xmodule/components 의 내용은 모든 앱(프로젝트)마다 커스터마징을 따로 해야 한다.
 
-필요에 따라서 xapi/components/* 의 내용을 src/components/* 폴더로 복사해서 사용을 하면 된다.
+필요에 따라서 xmodule/components/* 의 내용을 src/components/* 폴더로 복사해서 사용을 하면 된다.
 
 ## Global Event 전송을 통한 액션 처리
 
