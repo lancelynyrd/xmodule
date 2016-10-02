@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import { Library as lib } from './library';
+import { Library as lib } from '../functions/library';
 import { AlertController } from 'ionic-angular';
 import * as wi from '../interfaces/wordpress';
 //import * as xc from '../../xapi-config';
@@ -76,12 +76,6 @@ export class Xapi {
     }
 
     register( data: wi.UserRegisterData, successCallback: (res:wi.RegisterResponse) => void, errorCallback? ) {
-        /*
-        let e = encodeURIComponent;
-        let q = Object.keys( data )
-            .map( k => e(k) + '=' + e( data[k] ) )
-            .join( '&' );
-            */
         let url = this.serverUrl + '?xapi=user.register&' + lib.http_build_query( data );
         console.log('Xforum::register() : ' + url);
         this.get( url, (res:wi.RegisterResponse) => {
@@ -120,7 +114,66 @@ export class Xapi {
         return this.get( url, (x: wi.Categories) => successCallback( <wi.Categories>x ), errorCallback);
     }
 
+/**
+     * Gets a post.
+     */
+    get_post( post_ID : number | string, successCallback, errorCallback? ) {
+        let url = this.serverUrl + '?xapi=wordpress.get_post&post_ID=' + post_ID;
+        return this.get( url, successCallback, errorCallback);
+    }
+    delete_post( post_ID : any, successCallback, errorCallback? ) {
+        let url: string;
+        if ( typeof post_ID == 'number' || typeof post_ID == 'string' ) {
+            url = this.serverUrl + '?xapi=wordpress.delete_post&post_ID=' + post_ID;
+        }
+        else {
+            let obj = post_ID;
+            post_ID = obj.post_ID;
+            let password = obj.password;
+            url = this.serverUrl + '?xapi=wordpress.delete_post&post_ID=' + post_ID + '&password=' + password;
+        }
+        return this.get( url, successCallback, errorCallback);
+    }
 
+    /**
+     * Gets posts from WordPress
+     */
+    get_posts( arg: wi.PostQuery, callback, serverError ) {
+        let params = Object.keys( arg )
+                        .map( k => k + '=' + arg[k] )
+                        .join( '&' );
+        let url = this.serverUrl + '?' + params;
+        return this.get( url, callback, serverError );
+    }
+
+post_insert( data: wi.PostEdit, callback, serverError ) {
+        // console.log('Xforum::post_insert()', data);
+
+        /* TEST
+        let url = this.serverUrl + '?xapi=post.insert&' + this.buildQuery( data );
+        return this.get( url, callback, serverError );
+        */
+        return this.post( this.serverUrl + '?xapi=post.insert',
+                data,
+                callback,
+                serverError );
+    }
+
+    wp_query( queryString, successCallback, errorCallback ) {
+
+        let url = this.serverUrl + '?xapi=wordpress.wp_query&' + queryString;
+        console.log( 'wp_query: ', url );
+        return this.get( url, successCallback, errorCallback );
+
+    }
+
+    get_user( $user_login, successCallback, errorCallback ) {
+        let url = this.serverUrl + '?xapi=wordpress.get_user_by&field=login&value=' + $user_login;
+        console.log('get_user()', url);
+        return this.get( url, successCallback, errorCallback );
+    }
+
+    
 
     /**
      * Returns JSON from the input.

@@ -49,7 +49,7 @@ import * as wi from '../interfaces/wordpress';
   `,
   providers: [ Xapi ]
 })
-export class RegisterTemplate {
+export class RegisterComponent {
   private user: wi.UserRegisterData = wi.userRegisterData;
   t = {
     User_ID: 'User ID',
@@ -79,27 +79,28 @@ export class RegisterTemplate {
     Birthday: true,
     Gender: true
   };
-  @Output() beforeRequest = new EventEmitter<RegisterTemplate>();
-  @Output() afterRequest = new EventEmitter<RegisterTemplate>();
+  @Output() beforeRequest = new EventEmitter<RegisterComponent>();
+  @Output() afterRequest = new EventEmitter<RegisterComponent>();
   @Output() success = new EventEmitter<wi.UserData>();
-  @Output() cancel = new EventEmitter<RegisterTemplate>();
+  @Output() cancel = new EventEmitter<RegisterComponent>();
   @Output() error = new EventEmitter<string>();
 
   constructor(
     private x: Xapi
   ) {
-    console.log('RegisterTemplate::constructor()');
-    this.x.getLoginData( x => this.userLoggedIn() );
+    console.log('RegisterComponent::constructor()');
+    this.x.getLoginData( user => this.userLoggedIn( user ) );
   }
 
   /**
    * 회원이 이미 로그인을 한 경우 이 함수가 호출된다.
+   * 회원이 로그인을 했으면,
+   *  1. 로그인 관련 정보 출력
+   *  2. 서버로 부터 로그인 사용자의 정보를 추출하여 폼에 입력
    */
-  userLoggedIn() {
+  userLoggedIn( user: wi.UserData ) {
     this.t.Register = this.t.Update;
-    /**
-     * @todo 여기서부터. 회원이 로그인을 했으면, 회원 정보를 입력 항목에 넣어서 수정 할 수 있도록 한다.
-     */
+//    this.x.get_user( user.user_login, u => onGetUser( u ), e => onGetUserError( e ) )
   }
 
   /**
@@ -108,29 +109,29 @@ export class RegisterTemplate {
    *    'error' 이벤트는 서버로 쿼리가 올바로 되었는데, 프로그램적으로 logical 에러가 발생한 경우 이벤트를 trigger 한다.
    */
   onClickRegister() {
-    console.log("RegisterTemplate::onClickRegister()");
+    console.log("RegisterComponent::onClickRegister()");
     this.beforeRequest.emit(this);
     this.x.register( this.user, ( re: wi.RegisterResponse ) => {
       this.afterRequest.emit(this);
       if ( re.success ) {
-        console.log("RegisterTemplate::onClickRegister() success");
+        console.log("RegisterComponent::onClickRegister() success");
         this.success.emit( re.data );
       }
       else {
-        console.log("RegisterTemplate::onClickRegister() error");
+        console.log("RegisterComponent::onClickRegister() error");
         this.error.emit( <string>re.data );
       }
     },
     ( err ) => {
       this.afterRequest.emit(this);
-      console.log('RegisterTemplate::onClickRegister() error: ', err);
+      console.log('RegisterComponent::onClickRegister() error: ', err);
       // 서버 에러가 발생한 경우에는 이벤트가 발생하지 않는다.
       //this.error.emit('server_error');
     });
   }
 
   onClickCancel() {
-    console.log("RegisterTemplate::onClickCancel()");
+    console.log("RegisterComponent::onClickCancel()");
     this.cancel.emit(this);
   }
   

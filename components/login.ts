@@ -24,7 +24,7 @@ import * as wi from '../interfaces/wordpress';
   </ion-list>
   `
 })
-export class LoginTemplate {
+export class LoginComponent {
   private user: wi.UserLogin = wi.userLogin;
   t = {
     User_ID: 'User ID',
@@ -34,16 +34,16 @@ export class LoginTemplate {
     Login: 'Login',
     Cancel: 'Cancel'
   };
-  @Output() beforeRequest = new EventEmitter<LoginTemplate>();
-  @Output() afterRequest = new EventEmitter<LoginTemplate>();
+  @Output() beforeRequest = new EventEmitter<LoginComponent>();
+  @Output() afterRequest = new EventEmitter<LoginComponent>();
   @Output() success = new EventEmitter<wi.UserData>();
-  @Output() cancel = new EventEmitter<LoginTemplate>();
+  @Output() cancel = new EventEmitter<LoginComponent>();
   @Output() error = new EventEmitter<string>();
 
   constructor(
     private api: Xapi
     ) {
-    console.log('LoginTemplate::constructor()');
+    console.log('LoginComponent::constructor()');
     this.api.getLoginData( x => this.userLoggedIn() );
   }
 
@@ -54,28 +54,28 @@ export class LoginTemplate {
   }
 
   onClickLogin() {
-    console.log("RegisterTemplate::onClickRegister()");
+    console.log("LoginComponent::onClickRegister()");
     this.beforeRequest.emit(this);
     this.api.login( this.user, ( re: wi.RegisterResponse ) => {
       this.afterRequest.emit(this);
       if ( re.success ) {
-        console.log("RegisterTemplate::onClickRegister() success");
+        console.log("LoginComponent::onClickRegister() success");
         this.success.emit( re.data );
       }
       else {
-        console.log("RegisterTemplate::onClickRegister() error");
+        console.log("LoginComponent::onClickRegister() error");
         this.error.emit( <string>re.data );
       }
     },
     ( err ) => {
       this.afterRequest.emit(this);
-      console.log('RegisterTemplate::onClickRegister() error: ', err);
+      console.log('LoginComponent::onClickRegister() error: ', err);
       // this.error.emit('server_error');
     });
   }
 
   onClickCancel() {
-    console.log("RegisterTemplate::onClickCancel()");
+    console.log("LoginComponent::onClickCancel()");
     this.cancel.emit(this);
   }
 

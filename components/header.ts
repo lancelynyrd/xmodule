@@ -62,6 +62,10 @@ export class HeaderComponent {
             console.log('HeaderComponent::constructor::event logout');
             this.logout();
         } );
+        this.events.subscribe( 'register', (u) => {
+            console.log('HeaderComponent::regiter');
+            this.login(u);
+        });
     }
     login(u) {
         this.loggedIn = true;
