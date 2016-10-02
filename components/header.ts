@@ -6,7 +6,6 @@
  */
 import { Component, Input } from '@angular/core';
 import { NavController, Events } from 'ionic-angular';
-import { Login } from '../../pages/login/login';
 import { Xapi } from '../providers/xapi';
 
 @Component({
@@ -39,7 +38,7 @@ import { Xapi } from '../providers/xapi';
         </ion-navbar>
     `
 })
-export class AppHeader {
+export class HeaderComponent {
     @Input() appTitle: string = "AppTitle";
     @Input() hideCreateButton: boolean;
 
@@ -56,11 +55,11 @@ export class AppHeader {
     initialize() {
         this.x.getLoginData( x => this.loggedIn = true );
         this.events.subscribe( 'login', ( u ) => {
-            console.log('AppHeader::constructor::event login');
+            console.log('HeaderComponent::constructor::event login');
             this.login(u);
         } );
         this.events.subscribe( 'logout', () => {
-            console.log('AppHeader::constructor::event logout');
+            console.log('HeaderComponent::constructor::event logout');
             this.logout();
         } );
     }
@@ -73,7 +72,7 @@ export class AppHeader {
 
     onClickLogin() {
         console.log('app-header::onClickLogin() : ');
-        this.navCtrl.push( Login );       
+        //this.navCtrl.push( Login );       
     }
     onClickLogout() {
         this.x.logout();
