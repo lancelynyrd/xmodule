@@ -38,6 +38,16 @@ Ionic Xmodule for Ionic app development.
 
 ionic plugin add cordova-plugin-whitelist --save
 
+# Sample App Installation
+
+ionic start sample blank --v2
+cd sample
+rm -rf src
+git clone https://github.com/thruthesky/xmodule-sample-app src
+cd src
+git clone http://github.com/thruthesky/xmodule
+ionic serve
+
 
 /*
 # Old Folder structure
