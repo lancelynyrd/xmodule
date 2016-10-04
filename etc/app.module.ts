@@ -1,8 +1,3 @@
-/**
- * 
- * 
- * 
- */
 /*
 import { NgModule } from '@angular/core';
 import { IonicApp, IonicModule } from 'ionic-angular';
