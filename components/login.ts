@@ -16,6 +16,13 @@ import * as xi from '../interfaces/xapi';
         <ion-input [(ngModel)]="user.user_pass" placeholder="{{t.Input_Password}}"></ion-input>
       </ion-item>
 
+      <ion-item *ngIf="loading">
+        <ion-spinner></ion-spinner> Loading ...
+      </ion-item>
+      <ion-item *ngIf="message">
+        <ion-icon name="star"></ion-icon> {{ message }}
+      </ion-item>
+
       <ion-item>
         <button ion-button (click)="onClickLogin()">{{t.Login}}</button>
         <button ion-button (click)="onClickCancel()">{{t.Cancel}}</button>
@@ -26,6 +33,8 @@ import * as xi from '../interfaces/xapi';
 })
 export class LoginComponent {
   user: xi.UserLogin = xi.userLogin;
+  loading: boolean = false;
+  message: string = '';
   t = {
     User_ID: 'User ID',
     Password: 'Password',
@@ -44,19 +53,22 @@ export class LoginComponent {
     private api: Xapi
     ) {
     console.log('LoginComponent::constructor()');
-    this.api.getLoginData( x => this.userLoggedIn() );
+    this.api.getLoginData( x => this.userAlreadyLoggedIn(x) );
   }
 
   /**
    * 회원이 이미 로그인을 한 경우 이 함수가 호출된다.
    */
-  userLoggedIn() {
+  userAlreadyLoggedIn( user: xi.UserLoginData ) {
   }
 
   onClickLogin() {
     console.log("LoginComponent::onClickRegister()");
+    this.loading = true;
     this.beforeRequest.emit(this);
     this.api.login( this.user, ( re: xi.RegisterResponse ) => {
+      this.loading = false;
+      this.message = '';
       this.afterRequest.emit(this);
       if ( re.success ) {
         console.log("LoginComponent::onClickRegister() success");
@@ -64,10 +76,12 @@ export class LoginComponent {
       }
       else {
         console.log("LoginComponent::onClickRegister() error");
+        this.message = <string>re.data;
         this.error.emit( <string>re.data );
       }
     },
     ( err ) => {
+      this.loading = false;
       this.afterRequest.emit(this);
       console.log('LoginComponent::onClickRegister() error: ', err);
       // this.error.emit('server_error');
@@ -75,6 +89,7 @@ export class LoginComponent {
   }
 
   onClickCancel() {
+    this.loading = false;
     console.log("LoginComponent::onClickCancel()");
     this.cancel.emit(this);
   }

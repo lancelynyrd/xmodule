@@ -7,20 +7,32 @@ Ionic Xmodule for Ionic app development.
 
 # TODO
 
+
+* 로딩 표시, 에러메세지 표시를 xmodule 컴포넌트에서 처리
+
+* bug : login failed, but on header "LOGOUT" appears.
+
+* 다국어 처리. xmodule 컴포넌트에서 에러를 표시하면, 부모 컴포넌트에서 어떻게 에러를 다국어 처리 할 수 있나?
+@Input() t: Array<{code:string, text: string; }> 와 같이?
+
+* 검토: xmodule component 에서 전송하는 EventEmitter 를 xapi service 에서 전송하면??
+
 * @doc AppHeader 는 컴포넌트로서 각 앱에서 커스터마이징을 해야 한다.
 
-    AppHeaderComponent 로 명칭을 벼녕하도록 한다.
+    AppHeaderComponent 로 명칭을 변경하도록 한다.
 
     AppHeader 에서 Event 를 밖으로 보내는 것은 모든 페이지에서 이벤트를 받아서 처리해야 하기 때문에 힘들다.
 
-
-
-* login.ts 를 작업하다가 졸려서 중단 했음.
-
-* 회원 정보 수정.
-
-    xapi=user.get&login=abc 를 통해서 회원 정보를 추출 하고 보여 줄 것.
     
+
+# 참고
+
+* 비밀번호를 바꾸고 나서 연속으로 계속 바꾼 후 리프레쉬를 하면 로그인이 풀리는 경우가 있다.
+
+    * 가끔 그러는데, 웹 브라우저에서 LocalStorage 데이터를 막 지워서 그런 것 아닐까?
+
+    * 로그인이 풀리는 것은 심각한 문제로 이런일이 벌어지면 안된다.
+
 
 # Installation
 
@@ -107,26 +119,28 @@ xapi-config.ts 는 xapi 에 필요한 각종 변수, 함수, 클래스, 인터�
 
     * beforeRequest : 서버로 호출 직전에 이벤트가 발생
     * afterRequeset : 서버로 호출 한 다음에 이벤트가 발생. success, error 이벤트가 발생하지 직전에 먼저 이 이벤트가 발생한다.
-    * success : 성공
+    * success : 성공( 글 작성, 회원 가입 등 )
+    * update : 업데이트 성공.
+    * delete : 삭제 성공.
     * error : 실패. 주의 : 이 이벤트는 서버 4xx, 5xx 등의 에러를 포함하지 않는다. 오직 2xx 등 서버로 쿼리가 올바로 이루어진 후, 결과가 올바르지 않는 경우, 발생하는 에러이다. 예를 들면 비밀번호가 틀리는 등의 에러 상황에서 발생하는 이벤트이다.
     * cancel : 취소 버튼이 눌러진 경우 이벤트가 발생.
 
 
 ## 회원 로그인 체크
 
-회원 로그인은 app-header.ts 템플릿부터 많은 템플릿에서 기본적으로 사용된다.
-
-로그인에 따른 옵션 처리를 앱에서 @ViewChild() 등으로 하지 말고
-
-그냥 해당 template 에서 direct 로 아래와 같이 처리를 한다.
+앱이 실행되거나 컴포넌트가 view 에 들어 갈 때, 회원 로그인을 했는지 하지 않았는지 확인하는 방법은 아래와 같다.
 
 예제) 템플릿에서 예제 코드. Xapi 를 x 로 DI 해서 사용하면 된다.
 
-    this.x.getLoginData( x => this.userLoggedIn() );
-    userLoggedIn() { ... 필요한 처리 ... }
+    constructor( private x: Xapi ) {
+        this.x.getLoginData( user => this.userAlreadyLoggedIn(user) );
+    }
+    userAlreadyLoggedIn( user: xi.UserLoginData ) {
+    }
 
-필요한 경우 템플릿이 아닌 앱의 page 에서도 위의 코드를 그대로 사용 할 수 있다.
-다만, 꼭 필요 한 경우에만 사용 해야 한다.
+참고: 로그인에 따른 상태 변경을 @ViewChild() 으로 하면 된다.
+
+
 
 ### 로그인 성공시 회원 정보가 파라메타로전달된다.
 
@@ -182,6 +196,7 @@ example code)
       (beforeRequest)="onBeforeRequest($event)"
       (afterRequest)="onAfterRequest($event)"
       (success)="onSuccess($event)"
+      (update)="onUpdate($event)" // 업데이트 성공 시
       (cancel)="onCancel($event)"
       (error)="onError($event)"
     ></xapi-register>
@@ -262,7 +277,7 @@ xmodule/components 의 내용은 모든 앱(프로젝트)마다 커스터마징�
 
 
 
-### 액션 이벤트의 종류
+### global 액션 이벤트의 종류
 
     * login
         사용자 정보가 전달된다.
@@ -273,6 +288,10 @@ xmodule/components 의 내용은 모든 앱(프로젝트)마다 커스터마징�
     * register
         사용자 정보가 전달된다.
         이벤트가 전송되기 전에 회원 정보가 LocalStroage 에 저장된다.
+    * profile
+        사용자 정보를 업데이트하면 이벤트가 전송된다.
+        사용자 정보가 전달된다.
+        LocalStroage 에 저장된다.
     
     이러한 event 가 수신되면 각 컴포넌트에서는 적절한 처리를 하면 된다.
 
@@ -283,4 +302,8 @@ xapi 의 HeaderComponent 의 경우 각 앱에 따라 크게 수정되어야 하
 
 LoginComponent 의 경우, 모든 앱마다 일정한 틀이 있어서 크게 변경을 하지 않아도 된다.
 
-이와 같은 경우, @ViewChild() 를 통해서 LoginComponent 의 부분적인 변경을 할 수 있다.
+이와 같은 경우, 부모 컴포넌트에서 @ViewChild() 를 통해서 LoginComponent 의 부분적인 변경을 할 수 있다.
+
+
+
+

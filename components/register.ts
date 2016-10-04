@@ -41,6 +41,13 @@ import * as xi from '../interfaces/xapi';
         <ion-input [(ngModel)]="user.gender" placeholder="{{t.Input_Gender}}"></ion-input>
       </ion-item>
 
+      <ion-item *ngIf="loading">
+        <ion-spinner></ion-spinner> Loading ...
+      </ion-item>
+      <ion-item *ngIf="message">
+        <ion-icon name="star"></ion-icon> {{ message }}
+      </ion-item>
+
       <ion-item>
         <button *ngIf=" ! loggedIn " ion-button (click)="onClickRegister()">{{t.Register}}</button>
         <button *ngIf="   loggedIn " ion-button (click)="onClickUpdate()">{{t.Update}}</button>
@@ -52,6 +59,8 @@ import * as xi from '../interfaces/xapi';
   providers: [ Xapi ]
 })
 export class RegisterComponent {
+  loading: boolean = false;
+  message: string = '';
   loggedIn: boolean = false;
   user: xi.UserRegisterData = xi.userRegisterData;
   t = {
@@ -85,6 +94,7 @@ export class RegisterComponent {
   @Output() beforeRequest = new EventEmitter<RegisterComponent>();
   @Output() afterRequest = new EventEmitter<RegisterComponent>();
   @Output() success = new EventEmitter<xi.UserLoginData>();
+  @Output() update = new EventEmitter<xi.UserLoginData>();
   @Output() cancel = new EventEmitter<RegisterComponent>();
   @Output() error = new EventEmitter<string>();
 
@@ -93,7 +103,7 @@ export class RegisterComponent {
   ) {
     console.log('RegisterComponent::constructor()');
     this.user = <xi.UserRegisterData>{};
-    this.x.getLoginData( user => this.userLoggedIn( user ) );
+    this.x.getLoginData( user => this.userAlreadyLoggedIn( user ) );
   }
 
   /**
@@ -102,7 +112,7 @@ export class RegisterComponent {
    *  1. 로그인 관련 정보 출력
    *  2. 서버로 부터 로그인 사용자의 정보를 추출하여 폼에 입력
    */
-  userLoggedIn( user: xi.UserLoginData ) {
+  userAlreadyLoggedIn( user: xi.UserLoginData ) {
 
     //this.t.Register = this.t.Update;
     this.loggedIn = true;
@@ -113,10 +123,10 @@ export class RegisterComponent {
     this.user.session_id = user.session_id;
     this.user.user_login = user.user_login;
     this.user.user_email = user.user_email;
-    this.user.name = user.meta.name;
-    this.user.mobile = user.meta.mobile;
-    this.user.birthday = user.meta.birthday;
-    this.user.gender = user.meta.gender;
+    this.user.name = user.meta.name ? user.meta.name : '';
+    this.user.mobile = user.meta.mobile ? user.meta.mobile : '';
+    this.user.birthday = user.meta.birthday ? user.meta.birthday : '';
+    this.user.gender = user.meta.gender ? user.meta.gender : '';
   }
   onGetUserError( e ) {
     console.log( 'onGetUserError() ', e );
@@ -130,8 +140,11 @@ export class RegisterComponent {
    */
   onClickRegister() {
     console.log("RegisterComponent::onClickRegister()");
+    this.loading = true;
+    this.message = '';
     this.beforeRequest.emit(this);
     this.x.register( this.user, ( re: xi.RegisterResponse ) => {
+      this.loading = false;
       this.afterRequest.emit(this);
       if ( re.success ) {
         console.log("RegisterComponent::onClickRegister() success");
@@ -139,30 +152,37 @@ export class RegisterComponent {
       }
       else {
         console.log("RegisterComponent::onClickRegister() error");
+        this.message = <string>re.data;
         this.error.emit( <string>re.data );
       }
     },
     ( err ) => {
+      this.loading = false;
       this.afterRequest.emit(this);
       console.log('RegisterComponent::onClickRegister() error: ', err);
     });
   }
   onClickUpdate() {
     console.log("RegisterComponent::onClickUpdate()");
+    this.loading = true;
+    this.message = '';
     this.beforeRequest.emit(this);
-    this.x.userUpdate( this.user, ( re: xi.RegisterResponse ) => {
+    this.x.profile( this.user, ( re: xi.RegisterResponse ) => {
+      this.loading = false;
       console.log('RegisterComponent::onClickUpdate() -> userUpdate-> after', re);
       this.afterRequest.emit(this);
       if ( re.success ) {
         console.log("RegisterComponent::onClickUpdate() success");
-        this.success.emit( re.data );
+        this.update.emit( re.data );
       }
       else {
         console.log("RegisterComponent::onClickUpdate() error");
+        this.message = <string>re.data;
         this.error.emit( <string>re.data );
       }
     },
     ( err ) => {
+      this.loading = false;
       this.afterRequest.emit(this);
       console.log('RegisterComponent::onClickUpdate() error: ', err);
     });
@@ -170,6 +190,8 @@ export class RegisterComponent {
 
   onClickCancel() {
     console.log("RegisterComponent::onClickCancel()");
+    this.loading = false;
+    this.message = '';
     this.cancel.emit(this);
   }
   

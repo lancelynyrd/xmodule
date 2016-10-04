@@ -58,13 +58,17 @@ export class HeaderComponent {
             console.log('HeaderComponent::constructor::event login');
             this.login(u);
         } );
+        this.events.subscribe( 'register', (u) => {
+            console.log('HeaderComponent::regiter');
+            this.login(u);
+        });
         this.events.subscribe( 'logout', () => {
             console.log('HeaderComponent::constructor::event logout');
             this.logout();
         } );
-        this.events.subscribe( 'register', (u) => {
-            console.log('HeaderComponent::regiter');
-            this.login(u);
+        this.events.subscribe( 'resign', () => {
+            console.log('HeaderComponent::constructor::event resign');
+            this.logout();
         });
     }
     login(u) {

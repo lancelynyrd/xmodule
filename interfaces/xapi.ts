@@ -43,6 +43,10 @@ export interface UserData {
     }
 }
 
+export interface ResignResponse {
+  success: boolean;
+  data?: string;
+}
 
 export type Gender = '' | 'M' | 'F';
 /**
@@ -177,4 +181,11 @@ export interface FileUpload {
   id: number;
   url: string;
   type: string;
+}
+
+
+export interface UserPassword {
+  session_id: string;
+  old_password: string;
+  new_password: string;
 }

@@ -85,28 +85,67 @@ export class Xapi {
             successCallback( res );
         }, errorCallback);
     }
-    userUpdate( user: xi.UserRegisterData, successCallback, errorCallback ) {
-        let url = this.serverUrl + '?xapi=user.update&' + lib.http_build_query( user );
+    /**
+     * 사용자 정보를 수정한다.
+     * @note 이메일 수정은 가능하나 비밀번호 변경은 안된다.
+     */
+    profile( user: xi.UserRegisterData, successCallback, errorCallback ) {
+        let url = this.serverUrl + '?xapi=user.profile&' + lib.http_build_query( user );
         console.log('Xapi::userUpdate()', url);
         this.get( url, (res:xi.RegisterResponse) => {
             console.log('Xapi::userUpdate() -> success: ', res);
             this.saveLoginData( res.data );
-            this.events.publish( 'userUpdate', res.data );
+            this.events.publish( 'profile', res.data );
             successCallback( res );
         }, errorCallback);
 
     }
 
-    login( u: xi.UserLogin, callback, error) {
+    login( u: xi.UserLogin, successCallback, errorCallback) {
         let url = this.serverUrl + "?xapi=user.login&user_login="+u.user_login+"&user_pass="+u.user_pass;
         console.log('Xforum::login()', url);
         return this.get( url, ( res : xi.LoginResponse ) => {
             this.saveLoginData( res.data );
-            this.events.publish( 'login', res.data );
-            callback( res );
-        }, error );
+            if ( res.success ) this.events.publish( 'login', res.data );
+            successCallback( res );
+        }, errorCallback );
     }
 
+
+    /**
+     * Changes user password
+     * 
+     * 
+     */
+    password( user: xi.UserPassword, successCallback, errorCallback ) {
+        let url = this.serverUrl + '?xapi=user.password&' + lib.http_build_query( user );
+        console.log('XModule::password()', url);
+        this.get( url, ( res: xi.LoginResponse ) => {
+            this.saveLoginData( res.data );
+            this.events.publish( 'password', res.data );
+            successCallback( res );
+        },
+        errorCallback );
+    }
+
+
+    /**
+     * Resign
+     */
+    resign( successCallback, errorCallback ) {
+        console.log("Xapi::resign()");
+        this.getLoginData( user => {
+            console.log("Xapi::getLoginData() callback()");
+            let url = this.serverUrl + '?xapi=user.resign&' + lib.http_build_query( user );
+            console.log('XModule::resign()', url);
+            this.get( url, ( res: xi.ResignResponse ) => {
+                this.storage.remove('login');
+                this.events.publish( 'resign', res.data );
+                successCallback( res );
+            },
+            errorCallback );
+        });
+    }
 
     
     /**
@@ -266,6 +305,7 @@ post_insert( data: xi.PostEdit, callback, serverError ) {
         });
     }
     private saveLoginData( loginResponse ) {
+        console.log("Xmodule::saveLoginData()", loginResponse);
         try {
             this.storage.set('login', JSON.stringify( loginResponse ) );
         }
@@ -273,7 +313,12 @@ post_insert( data: xi.PostEdit, callback, serverError ) {
             this.error("setLoginData() -> JSON.stringify() error");
         }
     }
+    /**
+     * 
+     * @attention This method is being called on 'logout'
+     */
     logout() {
+        console.log("Xmodule::logout()");
         this.storage.remove('login');
         this.events.publish('logout');
     }

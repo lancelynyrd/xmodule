@@ -5,12 +5,16 @@ import { Xapi } from '../providers/xapi';
 import { HeaderComponent } from '../components/header';
 import { LoginComponent } from '../components/login';
 import { RegisterComponent } from '../components/register';
+import { PasswordComponent } from '../components/password';
+import { ResignComponent } from '../components/resign';
 import { Storage } from '@ionic/storage';
 @NgModule({
     declarations: [
         HeaderComponent,
         LoginComponent,
-        RegisterComponent
+        RegisterComponent,
+        PasswordComponent,
+        ResignComponent
     ],
     imports: [
         CommonModule,
@@ -24,7 +28,9 @@ import { Storage } from '@ionic/storage';
         CommonModule,
         HeaderComponent,
         LoginComponent,
-        RegisterComponent
+        RegisterComponent,
+        PasswordComponent,
+        ResignComponent
     ]
 })
 export class XModule { }
