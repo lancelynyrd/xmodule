@@ -40,12 +40,12 @@ ionic plugin add cordova-plugin-whitelist --save
 
 # Sample App Installation
 
-ionic start sample blank --v2
-cd sample
-rm -rf src
-git clone https://github.com/thruthesky/xmodule-sample-app src
-cd src
+ionic start sample blank --v2 --verbose
+cd sample/src
+rm -rf pages
+git clone https://github.com/thruthesky/xmodule-sample-pages pages 
 git clone http://github.com/thruthesky/xmodule
+cd ..
 ionic serve
 
 
