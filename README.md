@@ -40,6 +40,7 @@ ionic plugin add cordova-plugin-whitelist --save
 
 # Sample App Installation
 
+
 ionic start sample blank --v2 --verbose
 cd sample/src
 rm -rf pages
@@ -48,6 +49,7 @@ git clone http://github.com/thruthesky/xmodule
 cd ..
 ionic serve
 
+그리고 나서 xmodule/etc/app.module.ts 의 내용을 적절히 app/app.module.ts 로 복사한다.
 
 /*
 # Old Folder structure
