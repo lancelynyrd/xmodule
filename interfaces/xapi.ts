@@ -85,21 +85,19 @@ export interface LoginError {
  * @refer http://v2.wp-api.org/reference/categories/
  */
 export interface Category {
-  id: number;
-  count: number;
-  description: string;
-  link: string;
-  name: string;
+  cat_ID: number;
+  cat_name: string;
+  category_count: number;
+  category_description: string;
+  category_nicename: string;
+  category_parent: number;
   slug: string;
-  taxonomy: string;
-  parent: number;
 }
 
-
-/**
- * Category schema array
- */
-export type Categories = Array<Category>;
+export interface CategoryResponse {
+  success: boolean;
+  data: string | Array<Category>;
+}
 
 
 /**

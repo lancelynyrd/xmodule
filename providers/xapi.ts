@@ -159,9 +159,9 @@ export class Xapi {
         });
      * @endcode
      */
-    get_categories( args: xi.CategoryQueryArgument, successCallback: (res: xi.Categories) => void, errorCallback ) {
-        let url = this.serverUrl + 'categories?' + lib.http_build_query( args );
-        return this.get( url, (x: xi.Categories) => successCallback( <xi.Categories>x ), errorCallback);
+    get_categories( args: xi.CategoryQueryArgument, successCallback: (res: xi.CategoryResponse) => void, errorCallback ) {
+        let url = this.serverUrl + '?xapi=wordpress.get_categories' + lib.http_build_query( args );
+        return this.get( url, (x: xi.CategoryResponse) => successCallback( x ), errorCallback);
     }
 
 /**

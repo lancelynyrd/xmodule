@@ -8,9 +8,7 @@ Ionic Xmodule for Ionic app development.
 # TODO
 
 
-* 로딩 표시, 에러메세지 표시를 xmodule 컴포넌트에서 처리
-
-* bug : login failed, but on header "LOGOUT" appears.
+    
 
 * 다국어 처리. xmodule 컴포넌트에서 에러를 표시하면, 부모 컴포넌트에서 어떻게 에러를 다국어 처리 할 수 있나?
 @Input() t: Array<{code:string, text: string; }> 와 같이?

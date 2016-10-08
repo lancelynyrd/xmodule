@@ -7,6 +7,8 @@ import { LoginComponent } from '../components/login';
 import { RegisterComponent } from '../components/register';
 import { PasswordComponent } from '../components/password';
 import { ResignComponent } from '../components/resign';
+import { ForumCategoryComponent } from '../components/forum-category';
+import { PostListComponent } from '../components/post-list';
 import { Storage } from '@ionic/storage';
 @NgModule({
     declarations: [
@@ -14,7 +16,9 @@ import { Storage } from '@ionic/storage';
         LoginComponent,
         RegisterComponent,
         PasswordComponent,
-        ResignComponent
+        ResignComponent,
+        ForumCategoryComponent,
+        PostListComponent
     ],
     imports: [
         CommonModule,
@@ -30,7 +34,9 @@ import { Storage } from '@ionic/storage';
         LoginComponent,
         RegisterComponent,
         PasswordComponent,
-        ResignComponent
+        ResignComponent,
+        ForumCategoryComponent,
+        PostListComponent
     ]
 })
 export class XModule { }
