@@ -1,0 +1,14 @@
+#photo {
+    background-color: blue;
+
+    .wrap {
+        position: relative;
+        input {
+            position: absolute;
+            top: 0;
+            font-size: 100em;
+            height: 100em;
+            opacity: 0.01;
+        }
+    }
+}

@@ -9,6 +9,7 @@ import { PasswordComponent } from '../components/password';
 import { ResignComponent } from '../components/resign';
 import { ForumCategoryComponent } from '../components/forum-category';
 import { PostListComponent } from '../components/post-list';
+import { PostEditComponent } from '../components/post-edit/post-edit';
 import { PageController } from '../providers/page-controller';
 import { Storage } from '@ionic/storage';
 @NgModule({
@@ -19,7 +20,8 @@ import { Storage } from '@ionic/storage';
         PasswordComponent,
         ResignComponent,
         ForumCategoryComponent,
-        PostListComponent
+        PostListComponent,
+        PostEditComponent
     ],
     imports: [
         CommonModule,
@@ -38,7 +40,8 @@ import { Storage } from '@ionic/storage';
         PasswordComponent,
         ResignComponent,
         ForumCategoryComponent,
-        PostListComponent
+        PostListComponent,
+        PostEditComponent
     ]
 })
 export class XModule { }

@@ -322,19 +322,17 @@ LoginComponent 의 경우, 모든 앱마다 일정한 틀이 있어서 크게 �
 
 # providers/PageController.ts 를 통한 page 공유 및 페이지 관리
 
-
-
 예를 들어, HeaderComponent 에서 로그인 버튼을 클릭하면 이벤트가 발생하는데,
 
 모든 page component 에서 일일히 다 로그인 버튼에 대한 이벤트 핸들링을 할 수 없다.
 
 반복되는 코드가 많아지고, 번거러워 지기 때문이다.
 
-
 그래서,
 
 1. 처음 앱이 실행 될 때, Pages 에 페이지 정보를 입력한다.
 
+    주로 home.ts 에서 PageController.page = { ... } 에 설정을 하게 된다.
     로그인 페이지, 회원 가입 페이지, 글 쓰기 페이지 등 사용자의 입력이 필요하고 자주 사용되는 메뉴의 페이지를 지정한다.
     특히, HeaderComponent 와 같이 버튼이 항상 클릭 가능한 위치에 있을 때,
 
@@ -347,7 +345,19 @@ LoginComponent 의 경우, 모든 앱마다 일정한 틀이 있어서 크게 �
 
 문제점,
 
-HeaderComponent 에서 버튼이 여러개 있는 경우, 반복적으로 버튼을 클릭하면 계속 navCtrl.push() 하는 결과가 나타난다.
+    HeaderComponent 에서 버튼이 여러개 있는 경우, 반복적으로 버튼을 클릭하면 계속 navCtrl.push() 하는 결과가 나타난다.
+
+    해결점,
+
+    이와 같은 문제가 생기면, 아래와 같이 헤더에 해당 버튼을 없애는 것이 현재로서는 가장 좋은 방법 같다.
+
+        <ion-navbar>
+            <ion-title>User Login</ion-title>
+        </ion-navbar>
 
 
+# 글 작성/수정/목록 엮시 많은 커스터마이징이 필요하다.
 
+    컴포넌트 개념템플릿 개념으로 해서,
+
+        일반 게시판, 사진 게시판과 같이 템플릿화 할 필요성이 있다.

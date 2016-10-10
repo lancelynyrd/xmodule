@@ -6,7 +6,6 @@
 export interface PAGES {
     login: any;
     register: any;
-    postList: any;
     postEdit: any;
 }
 import { Injectable } from '@angular/core';

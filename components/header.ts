@@ -29,8 +29,8 @@ import { PageController } from '../providers/page-controller';
                 <button ion-button color="primary" login *ngIf="loggedIn " (click)="onClickLogout()">Logout</button>
                 <button ion-button color="primary" login *ngIf=" ! loggedIn " (click)="onClickLogin()">Login</button>
                 <button ion-button color="primary" login *ngIf=" ! loggedIn " (click)="onClickRegister()">Register</button>
-                <button ion-button (click)="onClickButton( 'post' )" *ngIf="!hideCreateButton"><ion-icon name="create"></ion-icon></button>
-                <button ion-button (click)="onClickButton( 'search' )"><ion-icon name="search"></ion-icon></button>
+                <button ion-button (click)="onClickPost( )" *ngIf="!hideCreateButton"><ion-icon name="create"></ion-icon></button>
+                <button ion-button (click)="onClickSearch( )"><ion-icon name="search"></ion-icon></button>
             </ion-buttons>
 
             <button menuToggle right>
@@ -98,8 +98,13 @@ export class HeaderComponent {
         this.loggedIn = false;
     }
 
-    onClickButton( event ) {
-        console.log('HeaderComponent::onClickButton()', event);
+    onClickPost( ) {
+        console.log('HeaderComponent::onClickPost()');
+        PageController.push( 'postEdit', this );
+    }
+
+    onClickSearch() {
+
     }
 
 }

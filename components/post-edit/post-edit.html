@@ -1,14 +1,14 @@
-  <ion-card>
-    <ion-card *ngIf="!isCordova" id="primary-photo" (click)="onClickPrimaryPhotoBrowser()">
+    <ion-card *ngIf="!isCordova" id="photo" (click)="onClickPrimaryPhotoBrowser()">
       <div class="wrap">
-        <div><img [src]="urlPrimaryPhoto"></div>
+        <div><img [src]="urlPhoto"></div>
         <input type="file" (change)="onBrowserUpload($event)">
         <span>Photo upload</span>
       </div>
     </ion-card>
-    <ion-card *ngIf="isCordova" id="primary-photo" (click)="onClickPrimaryPhotoApp()">
+
+    <ion-card *ngIf="isCordova" id="photo" (click)="onClickPrimaryPhotoApp()">
       <div class="wrap">
-        <div><img [src]="urlPrimaryPhoto"></div>
+        <div><img [src]="urlPhoto"></div>
         <button primary>CORDOVA UPLOAD</button>
       </div>
     </ion-card>
@@ -18,62 +18,38 @@
         <h2>Fill in all Information</h2>
       </ion-item-divider>
       <ion-item>
-        <ion-label floating>{{ 'First Name' | translate }}</ion-label>
-        <ion-input [(ngModel)]="post.first_name"></ion-input>
+        <ion-label floating>{{ 'Name' }}</ion-label>
+        <ion-input [(ngModel)]="name"></ion-input>
       </ion-item>
 
       <ion-item>
-        <ion-label floating>{{ 'Last Name' | translate }}</ion-label>
-        <ion-input [(ngModel)]="post.last_name"></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label floating>{{ 'Middle Name' | translate }}</ion-label>
-        <ion-input [(ngModel)]="post.middle_name" ></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label floating>{{ 'Address' | translate }}</ion-label>
-        <ion-input text-wrap [(ngModel)]="post.address" ></ion-input>
+        <ion-label floating>{{ 'Address' }}</ion-label>
+        <ion-input text-wrap [(ngModel)]="address" ></ion-input>
       </ion-item>
 
 
 
       <ion-item>
-        <ion-label floating>{{ 'Password' | translate }}</ion-label>
-        <ion-input [(ngModel)]="post.password" ></ion-input>
+        <ion-label floating>{{ 'Password' }}</ion-label>
+        <ion-input [(ngModel)]="password" ></ion-input>
       </ion-item>
 
       <ion-item>
-        <ion-label floating>{{ 'Mobile No.' | translate }}</ion-label>
-        <ion-input [(ngModel)]="post.mobile" ></ion-input>
+        <ion-label floating>{{ 'Mobile No.' }}</ion-label>
+        <ion-input [(ngModel)]="mobile" ></ion-input>
       </ion-item>
 
       <ion-item>
-        <ion-label floating>{{ 'Birthday' | translate }}</ion-label>
-        <ion-datetime displayFormat="YYYY/DD/MM" pickerFormat="MMMM DD YYYY" [(ngModel)]="post.birthday" margin-left></ion-datetime>
-        <ion-icon name="calendar" item-right=""></ion-icon>
-      </ion-item>
-
-      <ion-item>
-        <ion-label floating>{{ 'Gender' | translate }}</ion-label>
-        <ion-select [(ngModel)]="post.gender" placeholder="Select Gender" margin-left>
-          <ion-option value="F">Female</ion-option>
-          <ion-option value="M">Male</ion-option>
-        </ion-select>
+        <ion-label floating>{{ 'Title'  }}</ion-label>
+        <ion-input [(ngModel)]="post_title"></ion-input>
       </ion-item>
 
 
       <ion-item>
-        <ion-label floating>{{ 'Title' | translate }}</ion-label>
-        <ion-input [(ngModel)]="post.title"></ion-input>
+        <ion-label floating>{{ 'Content'  }}</ion-label>
+        <ion-textarea [(ngModel)]="post_content" [class.focused]='isFocused' (focus)="isFocused=true"></ion-textarea>
       </ion-item>
 
+      <button  (click)="onClickPost()">POST CREATE SUBMIT</button>
 
-      <ion-item>
-        <ion-label floating>{{ 'Content' | translate }}</ion-label>
-        <ion-textarea [(ngModel)]="post.content" [class.focused]='isFocused' (focus)="isFocused=true"></ion-textarea>
-      </ion-item>
-        <button  block (click)="onClickPost()">{{ 'POST CREATE SUBMIT' | translate }}</button>
     </ion-list>
-  </ion-card>
