@@ -292,12 +292,15 @@ xmodule/components 의 내용은 모든 앱(프로젝트)마다 커스터마징�
     * login
         사용자 정보가 전달된다.
         이벤트가 전송되기 전에 회원 정보가 LocalStroage 에 저장된다.
+
     * logout
         전달되는 정보가 없다.
         이벤트가 전송되기 전에 회원 정보가 LocalStroage 에서 삭제된다.
+
     * register
         사용자 정보가 전달된다.
         이벤트가 전송되기 전에 회원 정보가 LocalStroage 에 저장된다.
+        
     * profile
         사용자 정보를 업데이트하면 이벤트가 전송된다.
         사용자 정보가 전달된다.
@@ -314,6 +317,37 @@ LoginComponent 의 경우, 모든 앱마다 일정한 틀이 있어서 크게 �
 
 이와 같은 경우, 부모 컴포넌트에서 @ViewChild() 를 통해서 LoginComponent 의 부분적인 변경을 할 수 있다.
 
+
+
+
+# providers/PageController.ts 를 통한 page 공유 및 페이지 관리
+
+
+
+예를 들어, HeaderComponent 에서 로그인 버튼을 클릭하면 이벤트가 발생하는데,
+
+모든 page component 에서 일일히 다 로그인 버튼에 대한 이벤트 핸들링을 할 수 없다.
+
+반복되는 코드가 많아지고, 번거러워 지기 때문이다.
+
+
+그래서,
+
+1. 처음 앱이 실행 될 때, Pages 에 페이지 정보를 입력한다.
+
+    로그인 페이지, 회원 가입 페이지, 글 쓰기 페이지 등 사용자의 입력이 필요하고 자주 사용되는 메뉴의 페이지를 지정한다.
+    특히, HeaderComponent 와 같이 버튼이 항상 클릭 가능한 위치에 있을 때,
+
+2. HeaderComponent 에서 로그인 버튼 클릭 이벤트가 발생하면,
+
+3. PageController.push() 를 통해서 원하는 페이지로 이동을 하는 것이다.
+
+    모든 페이지 이동 코드를 PageController 클래스로 모아서 관리하기가 편하다.
+
+
+문제점,
+
+HeaderComponent 에서 버튼이 여러개 있는 경우, 반복적으로 버튼을 클릭하면 계속 navCtrl.push() 하는 결과가 나타난다.
 
 
 

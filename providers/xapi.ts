@@ -188,12 +188,15 @@ export class Xapi {
     /**
      * Gets posts from WordPress
      */
-    get_posts( arg: xi.PostQuery, callback, serverError ) {
+    get_posts( args: xi.PostQuery, successCallback, errorCallback) {
+        /*
         let params = Object.keys( arg )
                         .map( k => k + '=' + arg[k] )
                         .join( '&' );
         let url = this.serverUrl + '?' + params;
-        return this.get( url, callback, serverError );
+        */
+        let url = this.serverUrl + '?xapi=wp.get_posts&' + lib.http_build_query( args );
+        return this.get( url, successCallback, errorCallback);
     }
 
 post_insert( data: xi.PostEdit, callback, serverError ) {

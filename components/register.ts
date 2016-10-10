@@ -11,6 +11,10 @@ import * as xi from '../interfaces/xapi';
         <ion-input [(ngModel)]="user.user_login" placeholder="{{t.Input_User_ID}}"></ion-input>
       </ion-item>
 
+      <ion-item *ngIf=" loggedIn ">
+        {{ t.User_ID }} : {{ user.user_login }}
+      </ion-item>
+
       <ion-item *ngIf=" ! loggedIn ">
         <ion-label primary stacked>{{t.Password}}</ion-label>
         <ion-input [(ngModel)]="user.user_pass" placeholder="{{t.Input_Password}}"></ion-input>

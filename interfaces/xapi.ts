@@ -117,46 +117,35 @@ export interface CategoryQueryArgument {
  * @refer http://v2.wp-api.org/reference/posts/
  */
 export interface PostQuery {
-  xapi: string;
-  category: string;
+  category_name: string;
   paged: number;
   per_page?: number;
 }
 
 export let postQuery: PostQuery = {
-  xapi : 'post.page',
-  category : 'housemaid',
+  category_name : '',
   paged: 1,
   per_page : 20
 }
 
 export interface Post {
+  ID: number;
   date: string;
+  post_title: string;
+  post_content: string;
+  post_author: number;
+  post_parent: number;
   guid: string;
-  id: number;
-  link: string;
-  modified: string;
-  password: string;
-  slug: string;
-  title: string;
-  content: string;
-  author: number;
-  excerpt: string;
   images: Array<string>;
-  urlPrimaryPhoto?: string;
   comments: Array<{comment_title:string}>;
-  meta: {
-    first_name: Array<string>,
-    last_name: Array<string>,
-    middle_name: Array<string>,
-    mobile: Array<string>,
-    password: Array<string>,
-    address: Array<string>,
-    gender: Array<string>,
-    birthday: Array<string>
-  }
+  meta?: any;
 }
 export type Posts = Array<Post>;
+
+export interface PostQueryResponse {
+  success: boolean;
+  data: Posts;
+}
 
 
 export interface PostEdit {

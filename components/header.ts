@@ -7,7 +7,7 @@
 import { Component, Input } from '@angular/core';
 import { NavController, Events } from 'ionic-angular';
 import { Xapi } from '../providers/xapi';
-
+import { PageController } from '../providers/page-controller';
 @Component({
     selector: 'xapi-header',
     template: `
@@ -28,8 +28,9 @@ import { Xapi } from '../providers/xapi';
             <ion-buttons right>
                 <button ion-button color="primary" login *ngIf="loggedIn " (click)="onClickLogout()">Logout</button>
                 <button ion-button color="primary" login *ngIf=" ! loggedIn " (click)="onClickLogin()">Login</button>
-                <button ion-button (click)="onClickPostEdit()" *ngIf="!hideCreateButton"><ion-icon name="create"></ion-icon></button>
-                <button ion-button (click)="onClickSearch()"><ion-icon name="search"></ion-icon></button>
+                <button ion-button color="primary" login *ngIf=" ! loggedIn " (click)="onClickRegister()">Register</button>
+                <button ion-button (click)="onClickButton( 'post' )" *ngIf="!hideCreateButton"><ion-icon name="create"></ion-icon></button>
+                <button ion-button (click)="onClickButton( 'search' )"><ion-icon name="search"></ion-icon></button>
             </ion-buttons>
 
             <button menuToggle right>
@@ -51,6 +52,7 @@ export class HeaderComponent {
         private x: Xapi
     ) {
         this.initialize();
+        // console.log('PageController:', PageController.page);
     }
     initialize() {
         this.x.getLoginData( x => this.loggedIn = true );
@@ -80,18 +82,24 @@ export class HeaderComponent {
 
     onClickLogin() {
         console.log('app-header::onClickLogin() : ');
-        //this.navCtrl.push( Login );       
+        //this.navCtrl.push( Login );
+        PageController.push( 'login', this );
     }
+    
+    onClickRegister() {
+        console.log('app-header::onClickRegister() : ');
+        //this.navCtrl.push( Login );
+        PageController.push( 'register', this );
+    }
+
     onClickLogout() {
         this.x.logout();
         this.x.alert("로그아웃", "로그아웃하였습니다.");
         this.loggedIn = false;
     }
-    onClickPostEdit() {
 
+    onClickButton( event ) {
+        console.log('HeaderComponent::onClickButton()', event);
     }
 
-    onClickSearch () {
-
-    }
 }

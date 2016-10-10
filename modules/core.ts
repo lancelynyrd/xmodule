@@ -9,6 +9,7 @@ import { PasswordComponent } from '../components/password';
 import { ResignComponent } from '../components/resign';
 import { ForumCategoryComponent } from '../components/forum-category';
 import { PostListComponent } from '../components/post-list';
+import { PageController } from '../providers/page-controller';
 import { Storage } from '@ionic/storage';
 @NgModule({
     declarations: [
@@ -26,6 +27,7 @@ import { Storage } from '@ionic/storage';
      ],
     providers: [
         Xapi,
+        PageController,
         Storage
     ],
     exports: [
