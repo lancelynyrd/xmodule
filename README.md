@@ -15,6 +15,12 @@ Ionic Xmodule for Ionic app development.
 
 * 검토: xmodule component 에서 전송하는 EventEmitter 를 xapi service 에서 전송하면??
 
+* 비밀번호를 바꾸고 나서 연속으로 계속 바꾼 후 리프레쉬를 하면 로그인이 풀리는 경우가 있다.
+
+    * 가끔 그러는데, 웹 브라우저에서 LocalStorage 데이터를 막 지워서 그런 것 아닐까?
+
+    * 로그인이 풀리는 것은 심각한 문제로 이런일이 벌어지면 안된다.
+
 * @doc AppHeader 는 컴포넌트로서 각 앱에서 커스터마이징을 해야 한다.
 
     AppHeaderComponent 로 명칭을 변경하도록 한다.
@@ -22,19 +28,22 @@ Ionic Xmodule for Ionic app development.
     AppHeader 에서 Event 를 밖으로 보내는 것은 모든 페이지에서 이벤트를 받아서 처리해야 하기 때문에 힘들다.
 
     
-
-# 참고
-
-* 비밀번호를 바꾸고 나서 연속으로 계속 바꾼 후 리프레쉬를 하면 로그인이 풀리는 경우가 있다.
-
-    * 가끔 그러는데, 웹 브라우저에서 LocalStorage 데이터를 막 지워서 그런 것 아닐까?
-
-    * 로그인이 풀리는 것은 심각한 문제로 이런일이 벌어지면 안된다.
-
-
 # Installation
 
-ionic plugin add cordova-plugin-whitelist --save
+How to install Xmodule.
+
+* Package.json - adds below on package.json to copy xmodule assets into www/assets
+
+    "config": {
+        "ionic_copy": "./src/xmodule/etc/copy-assets.js"
+    },
+
+* Plugins to install
+
+    * ionic plugin add cordova-plugin-whitelist --save
+
+
+
 
 # Sample App Installation
 
@@ -48,21 +57,6 @@ cd ..
 ionic serve
 
 그리고 나서 xmodule/etc/app.module.ts 의 내용을 적절히 app/app.module.ts 로 복사한다.
-
-/*
-# Old Folder structure
-
-    * xapi/template/
-        In this folder, only template can be put.
-        A template may have a funcionality like 'user registration' or 'user login'
-        There is no 'page' folder and no page component since 'page' concept is included in template.
-        Do whatever a 'page' can do.
-
-    * xapi/provider/
-        In this folder, only service and function can be put.
-        No theme, css, template, page.
-        But service, functions
-*/
 
 
 
@@ -86,6 +80,10 @@ ionic serve
 
 * xmodule/modules
     all modules of xapi must be placed here.
+    
+* x-assets
+    This fold holds assets like image that are not copied to www folder and will be copied to www/x-assets.
+
     
 
 
@@ -158,6 +156,19 @@ xapi-config.ts 는 xapi 에 필요한 각종 변수, 함수, 클래스, 인터�
     console.log("onSuccess()");
     this.api.alert("LOGIN OK", `Welcome, ${user.user_login}. You have logged in.`);
   }
+
+
+## How to assets and images
+
+
+all images must be saved into x-assets folder
+and x-assets folder will be copied into www/x-assets
+so you can use like below.
+
+you can create sub-folders.
+
+    urlPhoto = 'x-assets/photo.png';
+
 
 
 

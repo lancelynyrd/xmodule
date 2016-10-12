@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
     templateUrl: 'post-edit.html'
 })
 export class PostEditComponent {
-    urlPhoto = 'assets/img/photo.png';
+    urlPhoto = 'x-assets/img/photo.png';
     
     name;
     address;
