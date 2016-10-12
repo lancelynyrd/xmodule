@@ -33,9 +33,6 @@ import { PageController } from '../providers/page-controller';
                 <button ion-button (click)="onClickSearch( )"><ion-icon name="search"></ion-icon></button>
             </ion-buttons>
 
-            <button menuToggle right>
-                <ion-icon name="menu"></ion-icon>
-            </button>
         </ion-navbar>
     `
 })

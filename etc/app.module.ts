@@ -10,6 +10,7 @@ import { PasswordPage } from '../pages/password/password';
 import { ResignPage } from '../pages/resign/resign';
 import { ForumCategoryPage } from '../pages/forum-category/forum-category';
 import { PostListPage } from '../pages/post-list/post-list';
+import { PostEditPage } from '../pages/post-edit/post-edit';
 import { XModule } from '../xmodule/modules/core';
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { XModule } from '../xmodule/modules/core';
     PasswordPage,
     ResignPage,
     ForumCategoryPage,
-    PostListPage
+    PostListPage,
+    PostEditPage
   ],
   imports: [
     XModule,
@@ -35,9 +37,11 @@ import { XModule } from '../xmodule/modules/core';
     PasswordPage,
     ResignPage,
     ForumCategoryPage,
-    PostListPage
+    PostListPage,
+    PostEditPage
   ],
   providers: [ ]
 })
 export class AppModule {}
+
 */
