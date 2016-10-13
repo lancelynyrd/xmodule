@@ -176,3 +176,12 @@ export interface UserPassword {
   old_password: string;
   new_password: string;
 }
+
+
+export interface FileUploadResponse {
+  success: boolean;
+  item: any;
+  response: any;
+  status: any;
+  headers: any;
+}

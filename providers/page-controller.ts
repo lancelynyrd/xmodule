@@ -5,6 +5,8 @@
  */
 export interface PAGES {
     login: any;
+    password: any;
+    resign: any;
     register: any;
     postEdit: any;
 }

@@ -12,6 +12,7 @@ import { PostListComponent } from '../components/post-list';
 import { PostEditComponent } from '../components/post-edit/post-edit';
 import { PageController } from '../providers/page-controller';
 import { Storage } from '@ionic/storage';
+import { Config } from '../providers/config';
 @NgModule({
     declarations: [
         HeaderComponent,
@@ -30,7 +31,8 @@ import { Storage } from '@ionic/storage';
     providers: [
         Xapi,
         PageController,
-        Storage
+        Storage,
+        Config
     ],
     exports: [
         CommonModule,

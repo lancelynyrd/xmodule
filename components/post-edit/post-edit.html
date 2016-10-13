@@ -1,17 +1,30 @@
-    <ion-card *ngIf="!isCordova" id="photo" (click)="onClickPrimaryPhotoBrowser()">
+    <ion-card *ngIf="!isCordova" id="photo">
       <div class="wrap">
         <div><img [src]="urlPhoto"></div>
-        <input type="file" (change)="onBrowserUpload($event)">
+        <input type="file" (change)="onChangeFileBrowser($event)">
         <span>Photo upload</span>
       </div>
     </ion-card>
 
-    <ion-card *ngIf="isCordova" id="photo" (click)="onClickPrimaryPhotoApp()">
+    <ion-card *ngIf="isCordova" id="photo" (click)="onClickFileApp()">
       <div class="wrap">
         <div><img [src]="urlPhoto"></div>
         <button primary>CORDOVA UPLOAD</button>
       </div>
     </ion-card>
+    
+    
+    
+    <ion-list class="display-uploaded-files">
+
+      <ion-item class="file" *ngFor=" let id of imageKeys ">
+        <img src="{{ images[id] }}" />
+        <button ion-button (click)="onDelete( id )">DELETE</button>
+      </ion-item>
+      
+    </ion-list>
+      
+
 
     <ion-list text-wrap>
       <ion-item-divider light>

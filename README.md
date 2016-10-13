@@ -41,6 +41,7 @@ How to install Xmodule.
 * Plugins to install
 
     * ionic plugin add cordova-plugin-whitelist --save
+    * npm install ng2-file-upload --save
 
 
 

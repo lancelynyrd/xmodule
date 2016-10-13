@@ -231,7 +231,7 @@ post_insert( data: xi.PostEdit, callback, serverError ) {
     /**
      * Returns JSON from the input.
      */
-    private json( str ) {
+    json( str ) {
         let res;
         if ( ! str ) {
             this.error("WordPress::Json() - Server returns empty data");
