@@ -199,7 +199,7 @@ export class Xapi {
         return this.get( url, successCallback, errorCallback);
     }
 
-post_insert( data: xi.PostEdit, callback, serverError ) {
+post_insert( data, successCallback, errorCallback ) {
         // console.log('Xforum::post_insert()', data);
 
         /* TEST
@@ -208,8 +208,8 @@ post_insert( data: xi.PostEdit, callback, serverError ) {
         */
         return this.post( this.serverUrl + '?xapi=post.insert',
                 data,
-                callback,
-                serverError );
+                successCallback,
+                errorCallback );
     }
 
     wp_query( queryString, successCallback, errorCallback ) {
@@ -324,6 +324,16 @@ post_insert( data: xi.PostEdit, callback, serverError ) {
         console.log("Xmodule::logout()");
         this.storage.remove('login');
         this.events.publish('logout');
+    }
+    
+    
+    delete_attachment( id: number, successCallback, errorCallback ) {
+        let url = this.serverUrl + '?xapi=wp.delete_attachment&id=' + id;
+        console.log('Xapi::register() : ' + url);
+        this.get( url, (res: xi.Response) => {
+            console.log("Xapi::delete_attachment(): ", res);
+            successCallback( res );
+        }, errorCallback);
     }
 
 }

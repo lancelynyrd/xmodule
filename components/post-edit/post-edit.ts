@@ -5,6 +5,15 @@ import * as xi from '../../interfaces/xapi';
 import { FileUploader } from 'ng2-file-upload/components/file-upload/file-uploader.class';
 import { Config } from '../../providers/config'
 
+export interface PostRequest {
+    category: string;
+    name: string;
+    password: string;
+    mobile: string;
+    post_title: string;
+    post_content: string;
+    fid: Array<string>;
+}
 @Component({
     selector: 'xapi-post-edit',
     templateUrl: 'post-edit.html'
@@ -13,13 +22,8 @@ export class PostEditComponent {
     urlPhoto = 'x-assets/img/photo.png';
     
     isCordova = false;
-    name;
-    address;
-    password;
-    mobile;
-    post_title;
-    post_content;
-    
+
+    post: PostRequest = <PostRequest> {};
     images = {};
     
     
@@ -128,8 +132,44 @@ export class PostEditComponent {
 
 
   onDelete( id ) {
-      console.log('delete: ' + id );
+      console.log('PostEditComponent::onDelete(), id: ' + id );
+      this.x.delete_attachment( id, (res: xi.Response ) => {
+          if ( res.success ) {
+            delete this.images[ res.data ];            
+          }
+          else {
+              this.x.error( res.data.message );
+          }
+      }, e => {
+          this.x.error( e );
+      })
   }
+  
+  onClickPost() {
+    console.log( this.post );
+    this.post.category = 'housemaid';
+    this.post.fid = this.imageKeys;
+    this.x.post_insert( this.post,
+        (res) => this.onClickPostComplete(res),
+        (res) => this.onClickPostServerError( res ) );
+  }
+  
+  onClickPostComplete( res ) {
+    console.log( res );
+    if ( res.success ) {
+      this.x.alert("SUCCESS", "Post upload success");
+      //this.navCtrl.pop();
+    }
+    else {
+      this.x.alert("ERROR", res.data);
+    }
+  }
+
+  onClickPostServerError( res ) {
+    this.x.error( "Error on Post. Please check if the backend server is alive.", res );
+    console.log( res );
+  }
+
 
 
 

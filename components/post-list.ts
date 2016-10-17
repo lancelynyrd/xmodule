@@ -25,6 +25,14 @@ import * as xi from '../interfaces/xapi';
   <ion-card-content>
     {{ post.ID }}
     <p>{{ post.post_content }}</p>
+    
+    
+    <ion-list *ngIf="post.images">
+        <ion-item *ngFor=" let url of post.images ">
+            <img src="{{ url }}">
+        </ion-item>
+    </ion-list>
+
   </ion-card-content>
 
   <ion-row>
@@ -99,7 +107,7 @@ export class PostListComponent {
         } );
     }
     displayPosts( posts: xi.Posts ) {
-        console.log('displayPosts()', posts);
+        //console.log('displayPosts()', posts);
         for( let post of posts ) {
             this.posts.push( (<xi.Post> post) );
         }

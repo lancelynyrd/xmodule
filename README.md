@@ -32,7 +32,7 @@ Ionic Xmodule for Ionic app development.
 
 How to install Xmodule.
 
-* Package.json - adds below on package.json to copy xmodule assets into www/assets
+* package.json - adds below on package.json to copy xmodule assets into www/assets
 
     "config": {
         "ionic_copy": "./src/xmodule/etc/copy-assets.js"
@@ -46,7 +46,7 @@ How to install Xmodule.
 
 
 
-# Sample App Installation
+# Installation - Sample App for Xmodule
 
 
 ionic start sample blank --v2 --verbose
@@ -55,6 +55,9 @@ rm -rf pages
 git clone https://github.com/thruthesky/xmodule-sample-pages pages 
 git clone http://github.com/thruthesky/xmodule
 cd ..
+// do what in installation
+// install modules, plugins in Installation
+cp xmodule/etc/app.module.ts app/app.module.ts
 ionic serve
 
 그리고 나서 xmodule/etc/app.module.ts 의 내용을 적절히 app/app.module.ts 로 복사한다.

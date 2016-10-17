@@ -1,4 +1,8 @@
 
+export interface Response {
+  success: boolean;
+  data?: any;
+}
 
 export interface UserLogin {
   user_login: string;

@@ -32,37 +32,33 @@
       </ion-item-divider>
       <ion-item>
         <ion-label floating>{{ 'Name' }}</ion-label>
-        <ion-input [(ngModel)]="name"></ion-input>
+        <ion-input [(ngModel)]="post.name"></ion-input>
       </ion-item>
 
-      <ion-item>
-        <ion-label floating>{{ 'Address' }}</ion-label>
-        <ion-input text-wrap [(ngModel)]="address" ></ion-input>
-      </ion-item>
 
 
 
       <ion-item>
         <ion-label floating>{{ 'Password' }}</ion-label>
-        <ion-input [(ngModel)]="password" ></ion-input>
+        <ion-input [(ngModel)]="post.password" ></ion-input>
       </ion-item>
 
       <ion-item>
         <ion-label floating>{{ 'Mobile No.' }}</ion-label>
-        <ion-input [(ngModel)]="mobile" ></ion-input>
+        <ion-input [(ngModel)]="post.mobile" ></ion-input>
       </ion-item>
 
       <ion-item>
         <ion-label floating>{{ 'Title'  }}</ion-label>
-        <ion-input [(ngModel)]="post_title"></ion-input>
+        <ion-input [(ngModel)]="post.post_title"></ion-input>
       </ion-item>
 
 
       <ion-item>
         <ion-label floating>{{ 'Content'  }}</ion-label>
-        <ion-textarea [(ngModel)]="post_content" [class.focused]='isFocused' (focus)="isFocused=true"></ion-textarea>
+        <ion-textarea [(ngModel)]="post.post_content" [class.focused]='isFocused' (focus)="isFocused=true"></ion-textarea>
       </ion-item>
 
-      <button  (click)="onClickPost()">POST CREATE SUBMIT</button>
+      <button ion-button (click)="onClickPost()">POST CREATE SUBMIT</button>
 
     </ion-list>
