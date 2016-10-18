@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { Xapi } from '../../providers/xapi';
 import * as xi from '../../interfaces/xapi';
@@ -20,7 +20,7 @@ export interface PostRequest {
 })
 export class PostEditComponent {
     urlPhoto = 'x-assets/img/photo.png';
-    
+    @Input() post_ID;
     isCordova = false;
 
     post: PostRequest = <PostRequest> {};

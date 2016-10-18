@@ -1,3 +1,4 @@
+/*
 import { Component, Input } from '@angular/core';
 
 import { Xapi } from '../providers/xapi';
@@ -6,56 +7,6 @@ import * as xi from '../interfaces/xapi';
 @Component({
     selector: 'xapi-post-list',
     template: `
-    <h2>Post List : {{ slug }}</h2>
-    
-
-
-<ion-card *ngFor=" let post of posts ">
-
-  <ion-item>
-    <ion-avatar item-left>
-      <img src="assets/tmp/marty-avatar.png">
-    </ion-avatar>
-    <h2>{{ post.post_title }}</h2>
-    <p>{{ post.post_date }}</p>
-  </ion-item>
-
-  <img src="assets/tmp/advance-card-bttf.png">
-
-  <ion-card-content>
-    {{ post.ID }}
-    <p>{{ post.post_content }}</p>
-    
-    
-    <ion-list *ngIf="post.images">
-        <ion-item *ngFor=" let url of post.images ">
-            <img src="{{ url }}">
-        </ion-item>
-    </ion-list>
-
-  </ion-card-content>
-
-  <ion-row>
-    <ion-col>
-      <button ion-button color="primary" clear small icon-left>
-        <ion-icon name='thumbs-up'></ion-icon>
-        0 Likes
-      </button>
-    </ion-col>
-    <ion-col>
-      <button ion-button color="primary" clear small icon-left>
-        <ion-icon name='text'></ion-icon>
-        0 Comments
-      </button>
-    </ion-col>
-    <ion-col center text-center>
-      <ion-note>
-        11h ago
-      </ion-note>
-    </ion-col>
-  </ion-row>
-
-</ion-card>
     
 
     `
@@ -122,3 +73,4 @@ export class PostListComponent {
         () => {} );
     }
 }
+*/

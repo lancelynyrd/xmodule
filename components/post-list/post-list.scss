@@ -1,0 +1,25 @@
+#post-list {
+    .images {
+        .image {
+            display: inline-block;
+            width: 33.33%;
+            height:4em;
+            overflow:hidden;
+            img {
+                width: 100%;
+            }
+        }
+    }
+    .meta {
+        .buttons {
+            span {
+                display: block;
+                float: left;
+                padding: .3em .5em;
+                background-color: #89abcd;
+                cursor: pointer;
+            }
+        }
+    }
+}
+

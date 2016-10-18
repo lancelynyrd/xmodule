@@ -1,0 +1,72 @@
+<section id="post-list">
+    <h2>Post List : {{ slug }}</h2>
+    
+
+
+<ion-card *ngFor=" let post of posts ">
+
+  <ion-item class="header">
+    <ion-avatar item-left>
+      <img src="x-assets/img/anonymous.gif">
+    </ion-avatar>
+    <h2>{{ post.post_title }}</h2>
+    <p>{{ post.post_date }}</p>
+  </ion-item>
+
+  <div *ngIf="post.images">
+    <img src="{{ post.images[0] }}">
+  </div>
+  
+  <!--
+    Show thubnails only when there are more than 2 images.
+  -->
+    <span class="images" *ngIf=" post.images && post.images.length > 1 ">
+        <span class="image" *ngFor=" let url of post.images ">
+            <img src="{{ url }}">
+        </span>
+    </span>
+
+
+  <ion-card-content>
+    {{ post.ID }}
+    <p>{{ post.post_content }}</p>
+    
+    
+
+  </ion-card-content>
+
+  <ion-row class="meta">
+    <ion-col width-25>
+      <button ion-button color="primary" clear small icon-left>
+        <ion-icon name='thumbs-up'></ion-icon>
+        0
+      </button>
+    </ion-col>
+    <ion-col width-25>
+      <button ion-button color="primary" clear small icon-left>
+        <ion-icon name='text'></ion-icon>
+        0
+      </button>
+    </ion-col>
+    <ion-col class="buttons" width-50 center text-center>
+      <span (click)="onClickEdit( post.ID )">Edit</span>
+      <span (click)="onClickDelete( post.ID )">Delete</span>
+
+<button ion-button icon-only (click)="more[post.ID] = ! more[post.ID]">
+  <ion-icon name="arrow-down"></ion-icon>
+</button>
+  <div *ngIf="more[post.ID]">
+      <span (click)="onClickReport( post.ID )">Report</span>
+      <span (click)="onClickCopy( post.ID )">Copy</span>
+      <span (click)="onClickMove( post.ID )">Move</span>
+      <span (click)="onClickBlind( post.ID )">Blind</span>
+      <span (click)="onClickBlock( post.ID )">Block</span>
+      <span (click)="onClickMessage( post.ID )">Message</span>
+      <span (click)="onClickListPosts( post.ID )">Posts of the user</span>
+    </div>
+    
+    </ion-col>
+  </ion-row>
+
+</ion-card>
+</section>

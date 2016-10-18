@@ -8,7 +8,7 @@ import { RegisterComponent } from '../components/register';
 import { PasswordComponent } from '../components/password';
 import { ResignComponent } from '../components/resign';
 import { ForumCategoryComponent } from '../components/forum-category';
-import { PostListComponent } from '../components/post-list';
+import { PostListComponent } from '../components/post-list/post-list';
 import { PostEditComponent } from '../components/post-edit/post-edit';
 import { PageController } from '../providers/page-controller';
 import { Storage } from '@ionic/storage';
