@@ -75,14 +75,22 @@ export class Xapi {
         return this.get( this.serverUrl + "?xapi=ping", callback);
     }
 
+
+    /**
+     * Resisters to the server.
+     * 
+     * @note it delivers the result through callback to the callee.
+     * @note it does Promise for non-blocking code.
+     */
     register( data: xi.UserRegisterData, successCallback: (res:xi.RegisterResponse) => void, errorCallback? ) {
         let url = this.serverUrl + '?xapi=user.register&' + lib.http_build_query( data );
         console.log('Xapi::register() : ' + url);
         this.get( url, (res:xi.RegisterResponse) => {
             console.log("Xapi::register() -> success: ", res);
-            this.saveLoginData( res.data );
-            this.events.publish( 'register', res.data );
-            successCallback( res );
+            this.saveLoginData( res.data ).then( () => {
+                this.events.publish( 'register', res.data );
+                successCallback( res );
+            });
         }, errorCallback);
     }
     /**
@@ -101,13 +109,18 @@ export class Xapi {
 
     }
 
+
+    /**
+     * Checks login to the server.
+     */
     login( u: xi.UserLogin, successCallback, errorCallback) {
         let url = this.serverUrl + "?xapi=user.login&user_login="+u.user_login+"&user_pass="+u.user_pass;
         console.log('Xforum::login()', url);
         return this.get( url, ( res : xi.LoginResponse ) => {
-            this.saveLoginData( res.data );
-            if ( res.success ) this.events.publish( 'login', res.data );
-            successCallback( res );
+            this.saveLoginData( res.data ).then( () => {
+                if ( res.success ) this.events.publish( 'login', res.data );
+                successCallback( res );
+            } );
         }, errorCallback );
     }
 
@@ -286,9 +299,18 @@ post_insert( data, successCallback, errorCallback ) {
     }
 
     /**
+     * 
+     * Returns user login data through callback.
+     * - Check if the user has already logged.
+     * @return false|x.UserLoginData - if the user has not logged in, false will be delivered to the callback.
+     * 
+     * @edit 2016-10-19 delivers false if the user has not logged in.
+     * 
      * 사용자 정보를 콜백으로 리턴한다.
      * 만약, 사용자 정보가 없거나 올바르지 않으면 콜백 함수가 호출되지 않는다.
      * 따라서 콜백 함수가 호출되면 제대로 정보가 전달되는 것이다.
+     * 
+     * 
      */
     getLoginData(callback) {
         this.storage.get('login').then(x => {
@@ -298,8 +320,10 @@ post_insert( data, successCallback, errorCallback ) {
                     let info: xi.UserLoginData = JSON.parse( x );
                     if ( info && info.session_id ) {
                         callback( info );
+                        return;
                     }
                 }
+                callback( false );
             }
             catch( e ) {
                 this.error("Failed on loading user login information. Please login again.");
@@ -307,10 +331,19 @@ post_insert( data, successCallback, errorCallback ) {
             }
         });
     }
+    
+    /**
+     * Saves user login data ( after login )
+     * 
+     * @return void|Promise
+     * 
+     * 
+     * @note it returns Promise for non-blocking code.
+     */
     private saveLoginData( loginResponse ) {
         console.log("Xmodule::saveLoginData()", loginResponse);
         try {
-            this.storage.set('login', JSON.stringify( loginResponse ) );
+            return this.storage.set('login', JSON.stringify( loginResponse ) );
         }
         catch ( e ) {
             this.error("setLoginData() -> JSON.stringify() error");
