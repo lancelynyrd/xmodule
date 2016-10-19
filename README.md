@@ -107,7 +107,7 @@ RegisterTemplate 에서 부모 컴포넌트로 접근하기 위해서는 @Output
 
 
 
-# 코딩 가이드
+# Coding Guideline - 코딩 가이드
 
 xapi 는 앱을 작성 할 때 사용되는 라이브러리이다.
 
@@ -120,6 +120,8 @@ xapi 에 백엔드 서버 주소 등은 앱 마다 틀리다.
 따라서 xapi 에서 xapi-config.ts 를 포함하기 위해서는 import * as xc from '../xapi-config'; 와 같이 하면 된다.
 
 xapi-config.ts 는 xapi 에 필요한 각종 변수, 함수, 클래스, 인터페이스 등을 기록하는 장소이다.
+
+
 
 
 
@@ -343,6 +345,8 @@ LoginComponent 의 경우, 모든 앱마다 일정한 틀이 있어서 크게 �
 
 반복되는 코드가 많아지고, 번거러워 지기 때문이다.
 
+물론, 커스터마이징을 할 때에는 직접 처리를 할 수 있다.
+
 그래서,
 
 1. 처음 앱이 실행 될 때, Pages 에 페이지 정보를 입력한다.
@@ -350,6 +354,8 @@ LoginComponent 의 경우, 모든 앱마다 일정한 틀이 있어서 크게 �
     주로 home.ts 에서 PageController.page = { ... } 에 설정을 하게 된다.
     로그인 페이지, 회원 가입 페이지, 글 쓰기 페이지 등 사용자의 입력이 필요하고 자주 사용되는 메뉴의 페이지를 지정한다.
     특히, HeaderComponent 와 같이 버튼이 항상 클릭 가능한 위치에 있을 때,
+    
+    주의: 'home' 항목의 NavController 를 사용해서 네이비게이션을 하므로 home 항목은 필수로 넣어야 한다.
 
 2. HeaderComponent 에서 로그인 버튼 클릭 이벤트가 발생하면,
 
