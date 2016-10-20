@@ -123,6 +123,15 @@ xapi-config.ts 는 xapi 에 필요한 각종 변수, 함수, 클래스, 인터�
 
 
 
+## Pages of xmodule
+
+* if it is a page, it must be created by app.
+    * xmodule does not create or directly access page.
+
+* xmodule only handes directive component and communicates with
+    * @Input, @Output, @ViewChild, EventEmitter, Events
+    
+
 
 ## 템플릿에서 발생하는 이벤트트
 

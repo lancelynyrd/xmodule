@@ -50,6 +50,18 @@ export class PostEditComponent {
     }
     
     
+    ngOnInit() {
+        if ( this.post_ID ) {
+        this.x.get_post( this.post_ID, re => {
+            console.log('PostEditComponent::ionViewDidLoad() => get_post():',re);
+            if ( re.success ) {
+                // @todo from here. 여기서부터
+                this.post.post_title = re.data.post_title;
+                this.post.post_content = re.data.post_content;
+            }
+        });
+        }
+    }
     initBrowserUpload() {
         console.log("initBrowserUpload()");
 
