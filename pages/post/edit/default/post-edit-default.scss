@@ -1,0 +1,40 @@
+
+#photo {
+    background-color: blue;
+
+    .wrap {
+        position: relative;
+        input {
+            position: absolute;
+            top: 0;
+            font-size: 100em;
+            height: 100em;
+            opacity: 0.01;
+        }
+    }
+}
+
+.display-uploaded-files {
+    .file {
+        float: left;
+        display: block;
+        position: relative;
+        width: 25%;
+        height: 25vw;
+        overflow:hidden;
+        img {
+            width: 100%;
+        }
+        button {
+            position: absolute;
+            margin: 0;
+            padding: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 0;
+            width: 100%;
+
+        }
+    }
+}
