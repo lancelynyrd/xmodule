@@ -64,6 +64,18 @@ export class PostListComponent {
     displayPosts( posts: xi.Posts ) {
         //console.log('displayPosts()', posts);
         for( let post of posts ) {
+            /**
+             * 서버에서 리턴되는 post 의 images 값은 fid 와 url 로 된 객체인데,
+             * 실제로 필요한 값은 배열로 된 url 값이다.
+             * 따라서 post.images 객체를 배열로 변경한다.
+             */
+            if ( post.images ) {
+                let arr = [];
+                for(var key in post.images ) {
+                    arr.push ( post.images[key] );
+                }
+                post.images = arr;
+            }
             this.posts.push( (<xi.Post> post) );
         }
     }

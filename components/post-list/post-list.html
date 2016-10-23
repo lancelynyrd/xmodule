@@ -10,7 +10,7 @@
       <img src="x-assets/img/anonymous.gif">
     </ion-avatar>
     <h2>{{ post.post_title }}</h2>
-    <p>{{ post.post_date }}</p>
+    <p>{{ post.post_date }}, {{ post.ID }}</p>
   </ion-item>
 
   <div *ngIf="post.images">
@@ -26,6 +26,7 @@
         </span>
     </span>
 
+    {{ post | json }}
 
   <ion-card-content>
     {{ post.ID }}

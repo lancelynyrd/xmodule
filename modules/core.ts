@@ -9,10 +9,12 @@ import { PasswordComponent } from '../components/password';
 import { ResignComponent } from '../components/resign';
 import { ForumCategoryComponent } from '../components/forum-category';
 import { PostListComponent } from '../components/post-list/post-list';
-import { PostEditComponent } from '../components/post-edit/post-edit';
+//import { PostEditComponent } from '../components/post-edit/post-edit';
 import { PageController } from '../providers/page-controller';
 import { Storage } from '@ionic/storage';
-import { Config } from '../providers/config';
+
+
+import { PostEditService } from '../providers/post-edit-service';
 @NgModule({
     declarations: [
         HeaderComponent,
@@ -22,7 +24,7 @@ import { Config } from '../providers/config';
         ResignComponent,
         ForumCategoryComponent,
         PostListComponent,
-        PostEditComponent
+//        PostEditComponent
     ],
     imports: [
         CommonModule,
@@ -32,7 +34,7 @@ import { Config } from '../providers/config';
         Xapi,
         PageController,
         Storage,
-        Config
+        PostEditService
     ],
     exports: [
         CommonModule,
@@ -43,7 +45,7 @@ import { Config } from '../providers/config';
         ResignComponent,
         ForumCategoryComponent,
         PostListComponent,
-        PostEditComponent
+//        PostEditComponent
     ]
 })
 export class XModule { }

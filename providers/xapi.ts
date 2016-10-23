@@ -15,8 +15,7 @@ import { Storage } from '@ionic/storage';
 
 @Injectable()
 export class Xapi {
-    private serverUrl: string;
-    private uploadUrl: string;
+    static _serverUrl: string;
     constructor(
         private http: Http,
         private alertCtrl: AlertController,
@@ -24,9 +23,17 @@ export class Xapi {
         private events: Events
         ) {
             console.log("Xapi::constructor()");
-        this.serverUrl = "http://work.org/wordpress/index.php";
-        this.uploadUrl = this.serverUrl + "?xapi=file.upload&type=primary-photo";
     } 
+
+    get serverUrl() {
+        return Xapi._serverUrl;
+    }
+    set serverUrl( url ) {
+        Xapi._serverUrl = url;
+    }
+    get uploadUrl() {
+        return this.serverUrl + "?xapi=file.upload&type=primary-photo";
+    }
 
 
     /**

@@ -134,7 +134,7 @@ export let postQuery: PostQuery = {
 
 export interface Post {
   ID: number;
-  date: string;
+  post_date: string;
   post_title: string;
   post_content: string;
   post_author: number;

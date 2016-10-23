@@ -7,25 +7,18 @@ Ionic Xmodule for Ionic app development.
 
 # TODO
 
+* Remove PageController
+* Remove Components or make it easy to create a page without compoennt.
+* Post Edit with photos
 
-    
+* Post delete
 
-* 다국어 처리. xmodule 컴포넌트에서 에러를 표시하면, 부모 컴포넌트에서 어떻게 에러를 다국어 처리 할 수 있나?
-@Input() t: Array<{code:string, text: string; }> 와 같이?
+* Comment CRUD
 
-* 검토: xmodule component 에서 전송하는 EventEmitter 를 xapi service 에서 전송하면??
+* 코딩 체계를 잡을 것. xmodule/components 를 각 앱 폴더에 복사해서 사용하는 것을 원칙으로 한다.
 
-* 비밀번호를 바꾸고 나서 연속으로 계속 바꾼 후 리프레쉬를 하면 로그인이 풀리는 경우가 있다.
+* Multi-lingual 다국어 처리.
 
-    * 가끔 그러는데, 웹 브라우저에서 LocalStorage 데이터를 막 지워서 그런 것 아닐까?
-
-    * 로그인이 풀리는 것은 심각한 문제로 이런일이 벌어지면 안된다.
-
-* @doc AppHeader 는 컴포넌트로서 각 앱에서 커스터마이징을 해야 한다.
-
-    AppHeaderComponent 로 명칭을 변경하도록 한다.
-
-    AppHeader 에서 Event 를 밖으로 보내는 것은 모든 페이지에서 이벤트를 받아서 처리해야 하기 때문에 힘들다.
 
     
 # Installation
@@ -398,6 +391,13 @@ LoginComponent 의 경우, 모든 앱마다 일정한 틀이 있어서 크게 �
 # How to use Xmodule
 
 
-* do 'Installation'
-* Add Xmodule to app module
-*
+* Do 'Installation'
+* Add Xmodule to app module as git submodule.
+* Copy 'src/xmodule/components/*' into your app folder and edit it from there.
+
+
+
+## Right way to use Xmodule
+
+* If any compoent in xmodule/componets matches your need, then use it as it is.
+* If not, create your own page without component.
