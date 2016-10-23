@@ -1,3 +1,12 @@
+/**
+ * 
+ * 
+ * Events
+ *  'user-login' if user logged in
+ *  'file-upload-success' on file upload success
+ * 
+ * 
+ */
 import { Injectable } from '@angular/core';
 import { Platform, Events } from 'ionic-angular';
 import { FileUploader } from 'ng2-file-upload/components/file-upload/file-uploader.class';
@@ -14,6 +23,9 @@ export class PostEditService {
         private events: Events,
         private x: Xapi
     ) {
+        x.getLoginData( (re) => {
+            if ( re ) events.publish( 'user-login', re );
+        });
         this.uploader = new FileUploader({ url: x.uploadUrl });
         this.platform.ready().then( () => {
             if ( this.platform.is('cordova') ) {
