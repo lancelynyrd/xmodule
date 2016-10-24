@@ -72,6 +72,7 @@ export class PostEditService {
 
    private onBrowserUploadComplete() {
     let response = this.result.response;
+    console.log(response);
     if ( response ) {
 
       // try {
@@ -103,7 +104,7 @@ export class PostEditService {
   }
 
   onPostInsertComplete( res, successCallback, failureCallback? ) {
-    //console.log( res );
+    console.log( res );
     if ( res.success ) {
         successCallback( res.data );
     }
@@ -115,9 +116,9 @@ export class PostEditService {
 
 
   onPostInsertServerError( res, serverErrorCallback? ) {
-      if ( serverErrorCallback ) serverErrorCallback();
+    console.log( res );
+    if ( serverErrorCallback ) serverErrorCallback();
     this.x.error( "Error on Post. Please check if the backend server is alive.", res );
-    //console.log( res );
   }
   upload( files ) {
     //console.log("PostEditService::upload()");
