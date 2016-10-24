@@ -95,25 +95,27 @@ export class PostEditService {
 
 
 
-  submit( post, callback ) {
+  submit( post, successCallback, failureCallback?, serverErrorCallback? ) {
       //console.log("PostEditService::submit()", post, callback);
     this.x.post_insert( post,
-        res => this.onPostInsertComplete( res, callback ),
-        res => this.onPostInsertServerError( res ) );
+        res => this.onPostInsertComplete( res, successCallback, failureCallback ),
+        res => this.onPostInsertServerError( res, serverErrorCallback ) );
   }
 
-  onPostInsertComplete( res, callback ) {
+  onPostInsertComplete( res, successCallback, failureCallback? ) {
     //console.log( res );
     if ( res.success ) {
-        callback( res.data );
+        successCallback( res.data );
     }
     else {
+        if ( failureCallback ) failureCallback( res.data );
       alert(res.data);
     }
   }
 
 
-  onPostInsertServerError( res ) {
+  onPostInsertServerError( res, serverErrorCallback? ) {
+      if ( serverErrorCallback ) serverErrorCallback();
     this.x.error( "Error on Post. Please check if the backend server is alive.", res );
     //console.log( res );
   }
