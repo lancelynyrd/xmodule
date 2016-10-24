@@ -10,7 +10,10 @@
       <img src="x-assets/img/anonymous.gif">
     </ion-avatar>
     <h2>{{ post.post_title }}</h2>
-    <p>{{ post.post_date }}, {{ post.ID }}</p>
+    <p>
+      {{ post.post_date }}, {{ post.ID }},
+      {{ post?.author_name }}
+    </p>
   </ion-item>
 
   <div *ngIf="post.images">

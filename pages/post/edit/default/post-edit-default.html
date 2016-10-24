@@ -16,6 +16,8 @@
 <ion-content padding>
 
 
+
+
     <ion-card *ngIf=" ! postEditService.isCordova " id="photo">
       <div class="wrap">
         <div><img [src]="urlPhoto"></div>
@@ -42,8 +44,6 @@
       
     </ion-list>
 
-      
-
     <ion-list text-wrap>
       <ion-item-divider light>
         <h2>Fill in all Information</h2>
@@ -53,8 +53,7 @@
         <ion-input [(ngModel)]="post.name"></ion-input>
       </ion-item>
 
-
-      <ion-item>
+      <ion-item *ngIf=" ! userLogin ">
         <ion-label floating>Password</ion-label>
         <ion-input [(ngModel)]="post.password" ></ion-input>
       </ion-item>
@@ -68,7 +67,6 @@
         <ion-label floating>Title</ion-label>
         <ion-input [(ngModel)]="post.post_title"></ion-input>
       </ion-item>
-
 
       <ion-item>
         <ion-label floating>Content</ion-label>

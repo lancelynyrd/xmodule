@@ -7,17 +7,13 @@ Ionic Xmodule for Ionic app development.
 
 # TODO
 
-* Remove PageController
-* Remove Components or make it easy to create a page without compoennt.
-* Post Edit with photos
-
+* Remove "x.getLoginData()", use "x.userloginData" instead
+* Member login & post crud.
 * Post delete
-
+* User crud with photo
 * Comment CRUD
-
-* 코딩 체계를 잡을 것. xmodule/components 를 각 앱 폴더에 복사해서 사용하는 것을 원칙으로 한다.
-
-* Multi-lingual 다국어 처리.
+* TEST on each function.
+* code refactoring.
 
 
     
@@ -390,14 +386,12 @@ LoginComponent 의 경우, 모든 앱마다 일정한 틀이 있어서 크게 �
 
 # How to use Xmodule
 
-
 * Do 'Installation'
 * Add Xmodule to app module as git submodule.
-* Copy 'src/xmodule/components/*' into your app folder and edit it from there.
+* Copy 'src/xmodule/components/*' into your app folder and edit it on your need.
+* For Post editing
+    * use post edit service
 
-
-
-## Right way to use Xmodule
 
 * If any compoent in xmodule/componets matches your need, then use it as it is.
 * If not, create your own page without component.

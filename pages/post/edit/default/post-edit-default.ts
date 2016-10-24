@@ -92,7 +92,7 @@ export let trimPostDataForSubmit: (x) => POST_SUBMIT = (x) : POST_SUBMIT => {
 export class PostEditDefaultPage {
 
   userLogin: boolean = false; // Becomes TRUE if user has logged in
-  userInfo; // user information
+  userLoginData; // user information
   urlPhoto: string;
   post: POST_DATA = postData();
   post_ID;
@@ -116,11 +116,21 @@ export class PostEditDefaultPage {
         });
       }
       events.subscribe('file-upload-success', x => this.onSuccessFileUpload(x[0]));
-      events.subscribe('user-login', ( re ) => {
-        this.userLogin = true;
-        this.userInfo = re[0];
-        console.log("userInfo: ", this.userInfo);
-      } );
+      //this.userLogin = postEditService.x.userLogin;
+      //this.userLoginData = postEditService.x.userLoginData;
+      this.postEditService.x.getLoginData( x => this.login( x ) );
+      this.events.subscribe( 'login', ( u ) => this.login(u) );
+      this.events.subscribe( 'register', (u) => this.login(u) );
+      this.events.subscribe( 'logout', () => this.logout() );
+      this.events.subscribe( 'resign', () => this.logout() );
+  }
+  login( u ) {
+      this.userLogin = true;
+      this.userLoginData = u;
+  }
+  logout() {
+      this.userLogin = false;
+      this.userLoginData = {};
   }
 
   onClickPost() {

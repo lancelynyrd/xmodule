@@ -2,7 +2,6 @@
  * 
  * 
  * Events
- *  'user-login' if user logged in
  *  'file-upload-success' on file upload success
  * 
  * 
@@ -21,11 +20,8 @@ export class PostEditService {
     constructor(
         private platform: Platform,
         private events: Events,
-        private x: Xapi
+        public x: Xapi
     ) {
-        x.getLoginData( (re) => {
-            if ( re ) events.publish( 'user-login', re );
-        });
         this.uploader = new FileUploader({ url: x.uploadUrl });
         this.platform.ready().then( () => {
             if ( this.platform.is('cordova') ) {

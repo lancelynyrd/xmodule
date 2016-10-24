@@ -52,7 +52,7 @@ export class HeaderComponent {
         // console.log('PageController:', PageController.page);
     }
     initialize() {
-        this.x.getLoginData( x => this.loggedIn = true );
+        this.x.getLoginData( x => this.loggedIn = true, () => this.loggedIn = false );
         this.events.subscribe( 'login', ( u ) => {
             console.log('HeaderComponent::constructor::event login');
             this.login(u);

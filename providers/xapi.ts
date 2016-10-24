@@ -16,17 +16,35 @@ import { Storage } from '@ionic/storage';
 @Injectable()
 export class Xapi {
     static _serverUrl: string;
+    userLoginData: xi.UserLoginData = <xi.UserLoginData> {};
     constructor(
         private http: Http,
         private alertCtrl: AlertController,
         private storage: Storage,
         private events: Events
         ) {
-            console.log("Xapi::constructor()");
-    } 
+//            console.log("Xapi::constructor()");
+        this.getLoginData( x => {
+            this.userLoginData = x;
+        });
+    }
 
+    /**
+     * Returns URL without user login session
+     */
     get serverUrl() {
         return Xapi._serverUrl;
+    }
+    /**
+     * Returns URL with user login session
+     */
+    get serverSessionUrl() {
+        if ( this.userLoginData ) {
+            return this.serverUrl + "?session_id=" + this.userLoginData.session_id;
+        }
+        else {
+            return this.serverUrl + "?";
+        }
     }
     set serverUrl( url ) {
         Xapi._serverUrl = url;
@@ -103,6 +121,7 @@ export class Xapi {
     /**
      * 사용자 정보를 수정한다.
      * @note 이메일 수정은 가능하나 비밀번호 변경은 안된다.
+     * @todo 사용자 session id 를 입력하고 수정하는 것.
      */
     profile( user: xi.UserRegisterData, successCallback, errorCallback ) {
         let url = this.serverUrl + '?xapi=user.profile&' + lib.http_build_query( user );
@@ -219,14 +238,14 @@ export class Xapi {
         return this.get( url, successCallback, errorCallback);
     }
 
-post_insert( data, successCallback, errorCallback ) {
+    post_insert( data, successCallback, errorCallback ) {
         // console.log('Xforum::post_insert()', data);
 
         /* TEST
         let url = this.serverUrl + '?xapi=post.insert&' + this.buildQuery( data );
         return this.get( url, callback, serverError );
         */
-        return this.post( this.serverUrl + '?xapi=post.insert',
+        return this.post( this.serverSessionUrl + '&xapi=post.insert',
                 data,
                 successCallback,
                 errorCallback );
@@ -307,37 +326,56 @@ post_insert( data, successCallback, errorCallback ) {
 
     /**
      * 
+     * 
+     * 
      * Returns user login data through callback.
      * - Check if the user has already logged.
-     * @return false|x.UserLoginData - if the user has not logged in, false will be delivered to the callback.
      * 
-     * @edit 2016-10-19 delivers false if the user has not logged in.
+     * @edit failureCallback will be called if user has not logged in.
      * 
      * 사용자 정보를 콜백으로 리턴한다.
-     * 만약, 사용자 정보가 없거나 올바르지 않으면 콜백 함수가 호출되지 않는다.
-     * 따라서 콜백 함수가 호출되면 제대로 정보가 전달되는 것이다.
+     * 만약, 사용자 정보가 없거나 올바르지 않으면 failureCalback 콜백 함수 호출된다.
      * 
+     * 참고 : 이 함수가 항상 async 형태로 사용 될 수 밖에 없는 이유는 Promise 를 사용하여,
+     *       이 함수가 끝이 나도 실제로 로그인을 했는지 하지 않았는지 알 수 없기 때문이다.
+     * 특히, 이 Xapi 를 Dependency Injection 을 하는 경우,
+     *      DI 를 할 때, 이 함수를 호출해서 값을 보관한다고 해도,
+     *      이 함수가 끝난다고 해서, 값이 저장되는 것이 아니다.
+     *      왜냐하면 이 함수는 Async 이 기 때문이다.
+     * 
+     *      이것은 다른 모든 자바스크립트 코드에도 동일하게 적용되는 것이다.
+     *      
+     * 따라서 이 함수의 결과와 saveLoginData() 의 결과를 userLoginData 에 저장하는데, 이 값은 Promise 의 동작에 의해서
+     * 올바른 값을 가지지 않을 수 있다.
+     * 
+     * @code
+     *   this.getLoginData( x => this.loggedIn = true, () => this.loggedIn = false );
+     * @endcode
      * 
      */
-    getLoginData(callback) {
+    getLoginData( successCallback, failureCallback? ) {
         this.storage.get('login').then(x => {
-            try {
-                // debugger;
-                if ( x ) {
-                    let info: xi.UserLoginData = JSON.parse( x );
-                    if ( info && info.session_id ) {
-                        callback( info );
-                        return;
+            if ( x ) {
+                try {
+                    // debugger;
+                    if ( x ) {
+                        let info: xi.UserLoginData = JSON.parse( x );
+                        if ( info && info.session_id ) {
+                            successCallback( info );
+                            return;
+                        }
                     }
+                    if ( failureCallback ) failureCallback();
                 }
-                callback( false );
+                catch( e ) {
+                    this.error("Failed on loading user login information. Please login again.");
+                    //this.error("getLoginData() -> JSON.parse() error");
+                }
             }
-            catch( e ) {
-                this.error("Failed on loading user login information. Please login again.");
-                //this.error("getLoginData() -> JSON.parse() error");
-            }
+            else if ( failureCallback ) failureCallback();
         });
     }
+    
     
     /**
      * Saves user login data ( after login )
@@ -350,6 +388,7 @@ post_insert( data, successCallback, errorCallback ) {
     private saveLoginData( loginResponse ) {
         console.log("Xmodule::saveLoginData()", loginResponse);
         try {
+            this.userLoginData = loginResponse;
             return this.storage.set('login', JSON.stringify( loginResponse ) );
         }
         catch ( e ) {
@@ -362,7 +401,9 @@ post_insert( data, successCallback, errorCallback ) {
      */
     logout() {
         console.log("Xmodule::logout()");
-        this.storage.remove('login');
+        this.saveLoginData( '' );
+        this.userLoginData = {};
+        //this.storage.remove('login');
         this.events.publish('logout');
     }
     
